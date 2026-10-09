@@ -30,7 +30,7 @@ export function EstrellaDeMar({ className = "" }: { className?: string }) {
     return `${(80 + radio * Math.cos(angulo)).toFixed(1)},${(80 + radio * Math.sin(angulo)).toFixed(1)}`;
   }).join(" ");
   return (
-    <svg aria-hidden="true" viewBox="0 0 160 160" className={`pointer-events-none ${className}`}>
+    <svg aria-hidden="true" viewBox="0 0 160 160" className={`reacciona cursor-pointer ${className}`}>
       <polygon points={puntos} fill="#fb7185" stroke="#be123c" strokeWidth="3" strokeLinejoin="round" />
       <circle cx="80" cy="82" r="5" fill="#fecdd3" />
       {[[70, 66], [90, 66], [80, 100]].map(([x, y]) => (

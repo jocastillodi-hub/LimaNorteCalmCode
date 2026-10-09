@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Racha from "@/components/Racha";
 import { useSesion } from "@/lib/session";
 
 // Navegación corta: lo esencial, sin repetir pantallas.
@@ -15,10 +16,10 @@ const enlaces = [
 
 export default function Nav() {
   const pathname = usePathname();
-  const { reiniciar } = useSesion();
+  const { reiniciar, nocturno, setNocturno } = useSesion();
 
   return (
-    <header className="relative z-10 border-b border-white/40 bg-sky-700/80 text-white backdrop-blur">
+    <header className="panel-nav relative z-10 border-b border-white/40 bg-sky-700/80 text-white backdrop-blur">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
         <Link href="/" className="text-lg font-semibold text-white">
           🌿 UCV · Bienestar
@@ -40,6 +41,17 @@ export default function Nav() {
             );
           })}
         </nav>
+        <div className="flex flex-wrap items-center gap-2">
+          <Racha />
+          <button
+            type="button"
+            role="switch"
+            aria-checked={nocturno}
+            onClick={() => setNocturno(!nocturno)}
+            className="rounded-full border border-white/50 px-3 py-1.5 text-sm text-white hover:bg-white/20"
+          >
+            {nocturno ? "☀️ Día" : "🌙 Noche"}
+          </button>
         <button
           type="button"
           onClick={reiniciar}
@@ -47,6 +59,7 @@ export default function Nav() {
         >
           🧹 Borrar sesión
         </button>
+        </div>
       </div>
     </header>
   );

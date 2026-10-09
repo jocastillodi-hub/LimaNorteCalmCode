@@ -101,7 +101,7 @@ function EscalaEmoji({
 }
 
 export default function CheckInFlow() {
-  const { setCheckin, checkin } = useSesion();
+  const { setCheckin, checkin, registrarActividad } = useSesion();
   const [paso, setPaso] = useState(0);
   const [r, setR] = useState<Respuestas>(checkin ?? {});
   const [resultado, setResultado] = useState<Orientacion | null>(null);
@@ -125,6 +125,7 @@ export default function CheckInFlow() {
     if (ultimo) {
       const datos = r as Checkin;
       setCheckin(datos);
+      registrarActividad();
       setResultado(evaluarCheckin(datos));
       return;
     }
@@ -147,7 +148,7 @@ export default function CheckInFlow() {
           <p className="mt-3 text-sm opacity-80">Esto se basa solo en tus respuestas. No es un diagnóstico.</p>
         </div>
 
-        <div className="rounded-3xl bg-white/85 p-6 shadow-sm">
+        <div className="panel rounded-3xl bg-white/85 p-6 shadow-sm">
           <h2 className="mb-3 text-lg font-semibold text-teal-800">✨ Tus próximos pasos</h2>
           <ul className="flex flex-col gap-3">
             {pasosPracticos[resultado.nivel].map((p) => (

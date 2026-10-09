@@ -20,6 +20,10 @@ type Sesion = {
   setEvaluacion: (e: Evaluacion | null) => void;
   chat: ChatMensaje[];
   setChat: (m: ChatMensaje[]) => void;
+  nocturno: boolean;
+  setNocturno: (v: boolean) => void;
+  racha: number;
+  registrarActividad: () => void;
   reiniciar: () => void;
 };
 
@@ -31,6 +35,10 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   const [emocionNota, setEmocionNota] = useState<{ emocion: Emocion | null; nota: string }>({ emocion: null, nota: "" });
   const [evaluacion, setEvaluacion] = useState<Evaluacion | null>(null);
   const [chat, setChat] = useState<ChatMensaje[]>([]);
+  const [nocturno, setNocturno] = useState(false);
+  // Racha: actividades completadas en esta sesión (no se guarda entre visitas).
+  const [racha, setRacha] = useState(0);
+  const registrarActividad = useCallback(() => setRacha((n) => n + 1), []);
 
   const reiniciar = useCallback(() => {
     setCheckinState(null);
@@ -38,6 +46,7 @@ export function SesionProvider({ children }: { children: ReactNode }) {
     setEmocionNota({ emocion: null, nota: "" });
     setEvaluacion(null);
     setChat([]);
+    setRacha(0);
   }, []);
 
   const setCheckin = useCallback((c: Checkin) => {
@@ -56,9 +65,13 @@ export function SesionProvider({ children }: { children: ReactNode }) {
       setEvaluacion,
       chat,
       setChat,
+      nocturno,
+      setNocturno,
+      racha,
+      registrarActividad,
       reiniciar,
     }),
-    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, reiniciar],
+    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, nocturno, racha, registrarActividad, reiniciar],
   );
 
   return <SesionContext.Provider value={valor}>{children}</SesionContext.Provider>;

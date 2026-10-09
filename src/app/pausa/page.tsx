@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Boton from "@/components/Boton";
 import MascotaInflable from "@/components/MascotaInflable";
 import Tarjeta from "@/components/Tarjeta";
+import { useSesion } from "@/lib/session";
 
 const DURACION = 180;
 const FASE_MS = 4000; // inhalar y exhalar suave, sin retener el aire
@@ -36,6 +37,8 @@ export default function Pausa() {
   const [paso2, setPaso2] = useState("");
   const [vozDisponible, setVozDisponible] = useState(false);
   const ultimaFase = useRef("");
+  const { registrarActividad } = useSesion();
+  const contada = useRef(false);
 
   useEffect(() => {
     setVozDisponible("speechSynthesis" in window);
@@ -55,6 +58,14 @@ export default function Pausa() {
       setExplotando(true);
     }
   }, [estado, restante]);
+
+  // Cuenta la pausa completa una sola vez para la racha.
+  useEffect(() => {
+    if (estado === "terminada" && restante === 0 && !contada.current) {
+      contada.current = true;
+      registrarActividad();
+    }
+  }, [estado, restante, registrarActividad]);
 
   // La explosión dura un momento y luego la mascota vuelve a su tamaño inicial.
   useEffect(() => {
@@ -97,6 +108,7 @@ export default function Pausa() {
     setExplotando(false);
     setPaso1(false);
     setPaso2("");
+    contada.current = false;
     ultimaFase.current = "";
     setFase("inhala");
     setEstado("activa");
