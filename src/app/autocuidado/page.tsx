@@ -2,17 +2,8 @@
 
 import { useState } from "react";
 import Tarjeta from "@/components/Tarjeta";
-import type { Emocion } from "@/lib/types";
-
-const emociones: [Emocion, string][] = [
-  ["tranquilidad", "Tranquilidad"],
-  ["alegria", "Alegría"],
-  ["tristeza", "Tristeza"],
-  ["frustracion", "Frustración"],
-  ["preocupacion", "Preocupación"],
-  ["agotamiento", "Agotamiento"],
-  ["otra", "Otra"],
-];
+import { emociones } from "@/lib/opciones";
+import { useSesion } from "@/lib/session";
 
 const ejercicios = [
   { titulo: "Respiración consciente", texto: "Respira por la nariz con calma y exhala más lento que inhalas. Repite 3 veces, sin forzar el aire." },
@@ -29,9 +20,8 @@ const reflexiones = [
 ];
 
 export default function Autocuidado() {
-  const [emocion, setEmocion] = useState<Emocion | null>(null);
+  const { emocionNota, setEmocionNota } = useSesion();
   const [abierto, setAbierto] = useState<number | null>(0);
-  const [nota, setNota] = useState("");
 
   return (
     <div className="flex flex-col gap-6">
@@ -46,21 +36,21 @@ export default function Autocuidado() {
             <button
               key={v}
               type="button"
-              aria-pressed={emocion === v}
-              onClick={() => setEmocion(v)}
-              className={`rounded-full border px-4 py-2 text-sm transition ${emocion === v ? "border-teal-600 bg-teal-600 text-white" : "border-teal-200 bg-white text-teal-800 hover:bg-teal-50"}`}
+              aria-pressed={emocionNota.emocion === v}
+              onClick={() => setEmocionNota({ ...emocionNota, emocion: v })}
+              className={`rounded-full border px-4 py-2 text-sm transition ${emocionNota.emocion === v ? "border-teal-600 bg-teal-600 text-white" : "border-teal-200 bg-white text-teal-800 hover:bg-teal-50"}`}
             >
               {t}
             </button>
           ))}
         </div>
-        {emocion && (
+        {emocionNota.emocion && (
           <div className="mt-4">
-            <label htmlFor="nota" className="block text-slate-700">¿Quieres anotar algo sobre esta emoción? (se borra al salir de la página)</label>
+            <label htmlFor="nota" className="block text-slate-700">¿Quieres anotar algo? (se borra al cerrar la sesión)</label>
             <textarea
               id="nota"
-              value={nota}
-              onChange={(e) => setNota(e.target.value.slice(0, 300))}
+              value={emocionNota.nota}
+              onChange={(e) => setEmocionNota({ ...emocionNota, nota: e.target.value.slice(0, 300) })}
               rows={2}
               className="mt-2 w-full rounded-xl border border-teal-200 px-4 py-3 outline-none focus:ring-2 focus:ring-teal-400"
             />

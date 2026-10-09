@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Boton from "@/components/Boton";
 import Tarjeta from "@/components/Tarjeta";
-import Link from "next/link";
 
 const DURACION = 180;
 const FASE_MS = 4000; // inhalar y exhalar suave, sin retener el aire
@@ -14,6 +14,8 @@ const alternativas = [
   "Pon una mano en el pecho y nota su movimiento, sin forzarlo.",
 ];
 
+type Estado = "lista" | "activa" | "pausada" | "terminada";
+
 function formatear(s: number) {
   const m = Math.floor(s / 60).toString().padStart(2, "0");
   const r = (s % 60).toString().padStart(2, "0");
@@ -22,36 +24,39 @@ function formatear(s: number) {
 
 export default function Pausa() {
   const [restante, setRestante] = useState(DURACION);
-  const [estado, setEstado] = useState<"lista" | "activa" | "pausada" | "terminada">("lista");
+  const [estado, setEstado] = useState<Estado>("lista");
+  const [detenida, setDetenida] = useState(false);
   const [audio, setAudio] = useState(false);
   const [fase, setFase] = useState<"inhala" | "exhala">("inhala");
   const [paso1, setPaso1] = useState(false);
   const [paso2, setPaso2] = useState("");
-  const [detenida, setDetenida] = useState(false);
-  const vozDisponible = typeof window !== "undefined" && "speechSynthesis" in window;
-  const ultimaFase = useRef<string>("");
+  const [vozDisponible, setVozDisponible] = useState(false);
+  const ultimaFase = useRef("");
 
   useEffect(() => {
+    setVozDisponible("speechSynthesis" in window);
+  }, []);
+
+  // Cuenta regresiva: solo cambia el tiempo; el cierre se decide abajo.
+  useEffect(() => {
     if (estado !== "activa") return;
-    const id = setInterval(() => {
-      setRestante((r) => {
-        if (r <= 1) {
-          clearInterval(id);
-          setEstado("terminada");
-          return 0;
-        }
-        return r - 1;
-      });
-    }, 1000);
+    const id = setInterval(() => setRestante((r) => Math.max(0, r - 1)), 1000);
     return () => clearInterval(id);
   }, [estado]);
 
+  // Al llegar a cero, la pausa termina por completo.
+  useEffect(() => {
+    if (estado === "activa" && restante === 0) setEstado("terminada");
+  }, [estado, restante]);
+
+  // Alternancia de inhalar / exhalar.
   useEffect(() => {
     if (estado !== "activa") return;
     const id = setInterval(() => setFase((f) => (f === "inhala" ? "exhala" : "inhala")), FASE_MS);
     return () => clearInterval(id);
   }, [estado]);
 
+  // Guía de voz: anuncia cada cambio de fase una sola vez.
   useEffect(() => {
     if (!audio || !vozDisponible || estado !== "activa") return;
     const texto = fase === "inhala" ? "Inhala suave" : "Exhala despacio";
@@ -61,25 +66,30 @@ export default function Pausa() {
     window.speechSynthesis.speak(new SpeechSynthesisUtterance(texto));
   }, [fase, audio, estado, vozDisponible]);
 
+  // Silencia la voz al salir de la página o al pausar.
+  useEffect(() => {
+    if ((estado !== "activa" || !audio) && vozDisponible) window.speechSynthesis.cancel();
+  }, [estado, audio, vozDisponible]);
+
   useEffect(() => {
     return () => {
       if (vozDisponible) window.speechSynthesis.cancel();
     };
   }, [vozDisponible]);
 
-  function detener() {
-    setDetenida(true);
-    setEstado("terminada");
-    if (vozDisponible) window.speechSynthesis.cancel();
-  }
-
-  function reiniciar() {
+  function iniciar() {
     setRestante(DURACION);
-    setEstado("lista");
     setDetenida(false);
     setPaso1(false);
     setPaso2("");
     ultimaFase.current = "";
+    setFase("inhala");
+    setEstado("activa");
+  }
+
+  function detener() {
+    setDetenida(true);
+    setEstado("terminada");
   }
 
   const progreso = ((DURACION - restante) / DURACION) * 100;
@@ -110,24 +120,20 @@ export default function Pausa() {
             </div>
           </div>
 
-          <div className="w-full">
-            <div
-              role="progressbar"
-              aria-valuemin={0}
-              aria-valuemax={DURACION}
-              aria-valuenow={DURACION - restante}
-              aria-label="Progreso de la pausa"
-              className="h-3 w-full overflow-hidden rounded-full bg-teal-100"
-            >
-              <div className="h-full bg-teal-600 transition-all" style={{ width: `${progreso}%` }} />
-            </div>
+          <div
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={DURACION}
+            aria-valuenow={DURACION - restante}
+            aria-label="Progreso de la pausa"
+            className="h-3 w-full overflow-hidden rounded-full bg-teal-100"
+          >
+            <div className="h-full bg-teal-600 transition-all" style={{ width: `${progreso}%` }} />
           </div>
 
           <div className="flex flex-wrap justify-center gap-3">
             {(estado === "lista" || estado === "terminada") && (
-              <Boton onClick={() => { reiniciar(); setEstado("activa"); }}>
-                {estado === "lista" ? "Iniciar" : "Empezar de nuevo"}
-              </Boton>
+              <Boton onClick={iniciar}>{estado === "lista" ? "Iniciar" : "Empezar de nuevo"}</Boton>
             )}
             {estado === "activa" && <Boton onClick={() => setEstado("pausada")}>Pausar</Boton>}
             {estado === "pausada" && <Boton onClick={() => setEstado("activa")}>Reanudar</Boton>}
@@ -180,10 +186,7 @@ export default function Pausa() {
             {completo ? "¡Terminaste la pausa!" : "Pausa detenida. Está bien, puedes volver cuando quieras."}
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <Link
-              href="/evaluacion"
-              className="rounded-xl bg-white px-4 py-2 font-medium text-teal-800 shadow-sm"
-            >
+            <Link href="/evaluacion" className="rounded-xl bg-white px-4 py-2 font-medium text-teal-800 shadow-sm">
               Registrar cómo me siento ahora
             </Link>
           </div>

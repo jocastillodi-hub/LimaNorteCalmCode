@@ -5,22 +5,34 @@ export const runtime = "nodejs";
 
 const MAX_MENSAJE = 1500;
 const MAX_HISTORIAL = 12;
+const MAX_CUERPO = 20_000; // bytes
 const VENTANA_MS = 10 * 60 * 1000;
 const MAX_POR_VENTANA = 20;
 
-// Límite simple por IP. En serverless (Vercel) cada instancia tiene su propio mapa:
-// para un control real usa un almacén compartido (p. ej. Upstash/Redis).
+// Límite por IP y global, en memoria. En Vercel cada instancia tiene su propio contador:
+// para un control estricto usa un almacén compartido (p. ej. Upstash/Redis).
 const contadores = new Map<string, { inicio: number; n: number }>();
+const TOPE_GLOBAL = 300; // solicitudes totales por ventana en esta instancia
 
-function dentroDeLimite(ip: string) {
+function contar(clave: string, tope: number) {
   const ahora = Date.now();
-  const r = contadores.get(ip);
+  const r = contadores.get(clave);
   if (!r || ahora - r.inicio > VENTANA_MS) {
-    contadores.set(ip, { inicio: ahora, n: 1 });
+    contadores.set(clave, { inicio: ahora, n: 1 });
     return true;
   }
   r.n += 1;
-  return r.n <= MAX_POR_VENTANA;
+  return r.n <= tope;
+}
+
+// Vercel añade x-vercel-forwarded-for y el cliente no puede falsearlo.
+// x-forwarded-for sí puede falsificarse, así que solo se usa si no hay otra opción.
+function ipCliente(req: Request) {
+  return (
+    req.headers.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "desconocida"
+  );
 }
 
 const SYSTEM_PROMPT = `Eres un asistente de escucha y orientación general para estudiantes universitarios, dentro de una plataforma de bienestar emocional.
@@ -45,12 +57,17 @@ function respuestaDemo(ultimo: string) {
 }
 
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anonimo";
-  if (!dentroDeLimite(ip)) {
+  const ip = ipCliente(req);
+  if (!contar(`ip:${ip}`, MAX_POR_VENTANA) || !contar("global", TOPE_GLOBAL)) {
     return NextResponse.json(
       { error: "Has enviado muchos mensajes seguidos. Espera unos minutos e inténtalo de nuevo." },
       { status: 429 },
     );
+  }
+
+  const tamano = Number(req.headers.get("content-length") ?? "0");
+  if (tamano > MAX_CUERPO) {
+    return NextResponse.json({ error: "El mensaje es demasiado largo." }, { status: 413 });
   }
 
   let cuerpo: unknown;

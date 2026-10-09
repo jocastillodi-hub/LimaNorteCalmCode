@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import Tarjeta from "@/components/Tarjeta";
-import { accionInicial, recomendacion, tareasDemo, type Tarea } from "@/lib/prioridades";
+import { accionInicial, recomendacion } from "@/lib/prioridades";
 import { useSesion } from "@/lib/session";
 
 export default function Prioridades() {
-  const { checkin } = useSesion();
+  const { checkin, tareas, setTareas } = useSesion();
   const tension = checkin?.tension ?? 3;
   const [minutos, setMinutos] = useState(60);
-  const [tareas, setTareas] = useState<Tarea[]>(tareasDemo);
   const [nueva, setNueva] = useState<Record<"practicas" | "tesis", string>>({ practicas: "", tesis: "" });
 
   const principal = (area: "practicas" | "tesis") => tareas.find((t) => t.area === area);

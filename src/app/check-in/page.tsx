@@ -6,33 +6,8 @@ import Boton from "@/components/Boton";
 import Tarjeta from "@/components/Tarjeta";
 import { evaluarCheckin, type Orientacion } from "@/lib/evaluacion";
 import { useSesion } from "@/lib/session";
+import { contextos, dificultades, emociones } from "@/lib/opciones";
 import type { Checkin, Contexto, Dificultad, Emocion } from "@/lib/types";
-
-const contextos: [Contexto, string][] = [
-  ["transporte", "Transporte público"],
-  ["casa", "En casa"],
-  ["universidad", "En la universidad"],
-  ["practicas", "Prácticas preprofesionales"],
-  ["tesis", "Estudiando para la tesis"],
-  ["otro", "Otro"],
-];
-const emociones: [Emocion, string][] = [
-  ["tranquilidad", "Tranquilidad"],
-  ["alegria", "Alegría"],
-  ["tristeza", "Tristeza"],
-  ["frustracion", "Frustración"],
-  ["preocupacion", "Preocupación"],
-  ["agotamiento", "Agotamiento"],
-  ["otra", "Otra"],
-];
-const dificultades: [Dificultad, string][] = [
-  ["exceso_tareas", "Exceso de tareas"],
-  ["falta_tiempo", "Falta de tiempo"],
-  ["presion_academica", "Presión académica"],
-  ["problemas_personales", "Problemas personales"],
-  ["cansancio", "Cansancio"],
-  ["otra", "Otra"],
-];
 
 const claseSelect = "w-full rounded-xl border border-teal-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-teal-400";
 

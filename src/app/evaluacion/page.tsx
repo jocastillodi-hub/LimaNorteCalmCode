@@ -10,13 +10,19 @@ import { useSesion } from "@/lib/session";
 const sentimientos = ["Más tranquilo/a", "Igual", "Más cansado/a", "Más preocupado/a", "Con más claridad", "Otro"];
 
 export default function Evaluacion() {
-  const { tensionAntes, tensionDespues, setTensionDespues, reiniciar } = useSesion();
-  const [sentimiento, setSentimiento] = useState("");
-  const [accion, setAccion] = useState("");
-  const [guardado, setGuardado] = useState(false);
+  const { tensionAntes, evaluacion, setEvaluacion, reiniciar } = useSesion();
+  const [tension, setTension] = useState<number | null>(evaluacion?.tensionDespues ?? null);
+  const [sentimiento, setSentimiento] = useState(evaluacion?.sentimiento ?? "");
+  const [accion, setAccion] = useState(evaluacion?.accion ?? "");
 
+  const guardada = evaluacion !== null;
   const comparacion =
-    tensionAntes !== null && tensionDespues !== null ? diferenciaTension(tensionAntes, tensionDespues) : null;
+    guardada && tensionAntes !== null ? diferenciaTension(tensionAntes, evaluacion.tensionDespues) : null;
+
+  function guardar() {
+    if (tension === null) return;
+    setEvaluacion({ tensionDespues: tension, sentimiento, accion });
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -32,9 +38,9 @@ export default function Evaluacion() {
               key={n}
               type="button"
               role="radio"
-              aria-checked={tensionDespues === n}
-              onClick={() => { setTensionDespues(n); setGuardado(false); }}
-              className={`h-12 w-12 rounded-xl border text-lg font-medium ${tensionDespues === n ? "border-teal-600 bg-teal-600 text-white" : "border-teal-200 bg-white hover:bg-teal-50"}`}
+              aria-checked={tension === n}
+              onClick={() => setTension(n)}
+              className={`h-12 w-12 rounded-xl border text-lg font-medium ${tension === n ? "border-teal-600 bg-teal-600 text-white" : "border-teal-200 bg-white hover:bg-teal-50"}`}
             >
               {n}
             </button>
@@ -67,17 +73,15 @@ export default function Evaluacion() {
       </Tarjeta>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Boton onClick={() => setGuardado(true)} disabled={tensionDespues === null}>
-          Guardar mi respuesta
-        </Boton>
-        {tensionDespues === null && <p className="text-sm text-slate-500">Elige un nivel de tensión para guardar.</p>}
+        <Boton onClick={guardar} disabled={tension === null}>Guardar mi respuesta</Boton>
+        {tension === null && <p className="text-sm text-slate-500">Elige un nivel de tensión para guardar.</p>}
       </div>
 
-      {guardado && (
+      {guardada && (
         <div role="status" className="rounded-2xl bg-teal-100 p-5 text-teal-900">
           {comparacion ? (
             <>
-              <p className="font-medium">Antes: {tensionAntes}/5 · Ahora: {tensionDespues}/5</p>
+              <p className="font-medium">Antes: {tensionAntes}/5 · Ahora: {evaluacion.tensionDespues}/5</p>
               <p className="mt-1">{comparacion.texto}</p>
             </>
           ) : (
@@ -86,7 +90,7 @@ export default function Evaluacion() {
               {tensionAntes === null && "Si haces el check-in, podremos comparar tu tensión antes y después."}
             </p>
           )}
-          {accion && <p className="mt-2">Tu siguiente paso: {accion}</p>}
+          {evaluacion.accion && <p className="mt-2">Tu siguiente paso: {evaluacion.accion}</p>}
         </div>
       )}
 
