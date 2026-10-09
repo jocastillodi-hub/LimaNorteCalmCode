@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apoyoUCV, emergencia } from "@/lib/config";
 
@@ -11,6 +12,7 @@ export default function BotonSOS() {
   const [abierto, setAbierto] = useState(false);
   const [peligro, setPeligro] = useState<boolean | null>(null);
   const [copiado, setCopiado] = useState<"ok" | "error" | null>(null);
+  const router = useRouter();
 
   function cerrar() {
     setAbierto(false);
@@ -45,7 +47,16 @@ export default function BotonSOS() {
               <p className="font-medium text-slate-800">¿Estás en peligro ahora mismo?</p>
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <button type="button" onClick={() => setPeligro(true)} className="rounded-2xl border-b-4 border-red-700 bg-red-500 px-3 py-3 font-bold text-white hover:bg-red-600">Sí</button>
-                <button type="button" onClick={() => setPeligro(false)} className="rounded-2xl border-b-4 border-slate-300 bg-slate-100 px-3 py-3 font-medium text-slate-800 hover:bg-slate-200">No</button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    cerrar();
+                    router.push("/pausa");
+                  }}
+                  className="rounded-2xl border-b-4 border-slate-300 bg-slate-100 px-3 py-3 font-medium text-slate-800 hover:bg-slate-200"
+                >
+                  No, respirar
+                </button>
               </div>
             </div>
           )}

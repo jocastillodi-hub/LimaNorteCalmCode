@@ -82,6 +82,8 @@ export default function Autocuidado() {
 
       <Tarjeta titulo="🤍 Pedir apoyo">
         <p className="text-slate-700">
+          Un rato de juego también ayuda. <Link href="/diversion" className="font-bold text-sky-700 underline">Ir a Rato de juego 🎈</Link>.
+          <br />
           Hablar con alguien de confianza puede aliviar mucho. Si lo necesitas, visita{" "}
           <Link href="/apoyo" className="font-bold text-sky-700 underline">Salvavidas</Link>.
         </p>

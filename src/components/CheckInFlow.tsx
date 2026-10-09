@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Boton from "@/components/Boton";
 import { evaluarCheckin, type Orientacion } from "@/lib/evaluacion";
 import { climas, contextos, dificultades, emociones } from "@/lib/opciones";
@@ -105,6 +106,15 @@ export default function CheckInFlow() {
   const [paso, setPaso] = useState(0);
   const [r, setR] = useState<Respuestas>(checkin ?? {});
   const [resultado, setResultado] = useState<Orientacion | null>(null);
+  const [cancelado, setCancelado] = useState(false);
+  const router = useRouter();
+
+  // Sobrecarga alta: después de un aviso breve, llevamos a un rato de juego (se puede cancelar).
+  useEffect(() => {
+    if (resultado?.nivel !== "alto" || cancelado) return;
+    const id = setTimeout(() => router.push("/diversion"), 5000);
+    return () => clearTimeout(id);
+  }, [resultado, cancelado, router]);
 
   // El clima es opcional: se puede saltar sin que bloquee el flujo.
   const pasos = [
@@ -141,6 +151,12 @@ export default function CheckInFlow() {
   if (resultado) {
     return (
       <div className="mx-auto flex max-w-2xl flex-col gap-6">
+        {resultado.nivel === "alto" && !cancelado && (
+          <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-sky-100 px-4 py-3 text-sky-900">
+            <span>🎈 Te llevamos a un rato de juego en unos segundos.</span>
+            <button type="button" onClick={() => setCancelado(true)} className="font-bold underline">Quedarme aquí</button>
+          </div>
+        )}
         <div className={`rounded-3xl border bg-gradient-to-br p-6 shadow-md sm:p-8 ${colorNivel[resultado.nivel]}`} role="status">
           <p className="text-6xl" aria-hidden="true">{emojiNivel[resultado.nivel]}</p>
           <h1 className="mt-3 text-2xl font-bold sm:text-3xl">{resultado.titulo}</h1>

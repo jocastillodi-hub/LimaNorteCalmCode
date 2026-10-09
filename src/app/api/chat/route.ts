@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { haySenalDeRiesgo } from "@/lib/seguridad";
+import { CURSOS } from "@/lib/red";
 
 export const runtime = "nodejs";
 
@@ -50,6 +51,14 @@ Reglas:
 
 type MensajeEntrada = { rol: "usuario" | "asistente"; texto: string };
 
+// Asistente de un curso (ficticio): orienta el estudio, nunca entrega respuestas de exámenes.
+const PROMPT_CURSO = (curso: string) => `Eres un asistente de estudio del curso ficticio "${curso}", dentro de una plataforma educativa de demostración.
+Reglas:
+- Explica conceptos, propone métodos de estudio y hace preguntas que guíen al estudiante.
+- No resuelvas exámenes, prácticas calificadas ni tareas evaluadas: da pistas y pasos generales, no el resultado final.
+- Responde en español, breve, con ejemplos cotidianos. Máximo 6 líneas.
+- Si la pregunta no es sobre estudio, redirige amablemente al curso.`;
+
 function respuestaDemo(ultimo: string) {
   const riesgo = haySenalDeRiesgo(ultimo);
   if (riesgo) {
@@ -80,6 +89,10 @@ export async function POST(req: Request) {
   }
 
   const mensajes = (cuerpo as { mensajes?: unknown })?.mensajes;
+  const cursoBruto = (cuerpo as { curso?: unknown })?.curso;
+  // Solo se aceptan nombres del catálogo de cursos ficticios.
+  const curso =
+    typeof cursoBruto === "string" && CURSOS.some((c) => c.nombre === cursoBruto) ? cursoBruto : "";
   if (!Array.isArray(mensajes) || mensajes.length === 0) {
     return NextResponse.json({ error: "Escribe un mensaje para continuar." }, { status: 400 });
   }
@@ -102,7 +115,10 @@ export async function POST(req: Request) {
 
   const clave = process.env.ANTHROPIC_API_KEY;
   if (!clave) {
-    return NextResponse.json({ demo: true, respuesta: respuestaDemo(ultimo.texto) });
+    const demo = curso
+      ? `Modo demostrativo del asistente de ${curso}: sin IA externa conectada. Cuando la IA esté configurada, aquí recibirás explicaciones y pistas sobre el curso. Por ahora, prueba con un método de estudio: dibuja el problema y escribe qué datos tienes.`
+      : respuestaDemo(ultimo.texto);
+    return NextResponse.json({ demo: true, respuesta: demo });
   }
 
   try {
@@ -116,7 +132,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         model: process.env.ANTHROPIC_MODEL || "claude-haiku-5-5",
         max_tokens: 500,
-        system: SYSTEM_PROMPT,
+        system: curso ? PROMPT_CURSO(curso) : SYSTEM_PROMPT,
         messages: limpios.map((m) => ({
           role: m.rol === "usuario" ? "user" : "assistant",
           content: m.texto,
