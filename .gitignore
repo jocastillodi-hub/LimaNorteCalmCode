@@ -4,3 +4,7 @@ next-env.d.ts
 *.tsbuildinfo
 .vercel/
 .vercel
+
+# Variables locales (claves y configuración): nunca a Git
+.env
+.env*.local
