@@ -1,13 +1,22 @@
 import type { Metadata } from "next";
+import "./globals.css";
+import Nav from "@/components/Nav";
+import { SesionProvider } from "@/lib/session";
 
 export const metadata: Metadata = {
   title: "UCV",
+  description: "Bienestar emocional y apoyo académico para estudiantes.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body style={{ margin: 0, fontFamily: "system-ui, sans-serif" }}>{children}</body>
+      <body className="min-h-dvh bg-teal-50 font-sans text-slate-800 antialiased">
+        <SesionProvider>
+          <Nav />
+          <main className="mx-auto max-w-5xl px-4 py-8 sm:py-10">{children}</main>
+        </SesionProvider>
+      </body>
     </html>
   );
 }

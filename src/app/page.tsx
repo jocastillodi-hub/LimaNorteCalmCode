@@ -1,49 +1,48 @@
-const jugadores = [
-  { nombre: "Carlos Mendoza", posicion: "Delantero", equipo: "Universitario", goles: 12 },
-  { nombre: "Luis Ramírez", posicion: "Mediocampista", equipo: "Alianza Lima", goles: 4 },
-  { nombre: "Diego Flores", posicion: "Defensa", equipo: "Sporting Cristal", goles: 1 },
-  { nombre: "Andrés Quispe", posicion: "Portero", equipo: "Melgar", goles: 0 },
-  { nombre: "Miguel Torres", posicion: "Delantero", equipo: "Sport Boys", goles: 9 },
-];
+"use client";
 
-const celda = { padding: "0.5rem 1rem", borderBottom: "1px solid #99f6e4", textAlign: "left" as const };
+import Link from "next/link";
+import Tarjeta from "@/components/Tarjeta";
+import { useSesion } from "@/lib/session";
 
-export default function Home() {
+export default function Inicio() {
+  const { nombre, setNombre } = useSesion();
+
   return (
-    <main
-      style={{
-        minHeight: "100dvh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "2rem",
-        padding: "2rem",
-        background: "#f0fdfa",
-      }}
-    >
-      <h1 style={{ fontSize: "3rem", color: "#0f766e", margin: 0 }}>UCV</h1>
+    <div className="flex flex-col gap-6">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-teal-700 sm:text-5xl">Bienvenido</h1>
+        <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600">
+          Un espacio para reconocer cómo te sientes, bajar la tensión y ordenar tu estudio sin presión.
+        </p>
+        <p className="mx-auto mt-3 max-w-xl rounded-xl bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800">
+          Esta herramienta apoya, no diagnostica.
+        </p>
+      </div>
 
-      <table style={{ borderCollapse: "collapse", background: "#ffffff", color: "#134e4a" }}>
-        <thead>
-          <tr style={{ background: "#0f766e", color: "#ffffff" }}>
-            <th style={celda}>Nombre</th>
-            <th style={celda}>Posición</th>
-            <th style={celda}>Equipo</th>
-            <th style={{ ...celda, textAlign: "right" }}>Goles</th>
-          </tr>
-        </thead>
-        <tbody>
-          {jugadores.map((j) => (
-            <tr key={j.nombre}>
-              <td style={celda}>{j.nombre}</td>
-              <td style={celda}>{j.posicion}</td>
-              <td style={celda}>{j.equipo}</td>
-              <td style={{ ...celda, textAlign: "right" }}>{j.goles}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </main>
+      <Tarjeta titulo="¿Cómo te llamamos? (opcional)">
+        <label htmlFor="nombre" className="sr-only">
+          Nombre opcional
+        </label>
+        <input
+          id="nombre"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value.slice(0, 40))}
+          placeholder="Puedes escribir un nombre o continuar como anónimo"
+          className="w-full rounded-xl border border-teal-200 px-4 py-3 outline-none focus:ring-2 focus:ring-teal-400"
+        />
+        <p className="mt-2 text-sm text-slate-500">
+          No pedimos registro, correo ni contraseña. El nombre solo se guarda mientras la página está abierta.
+        </p>
+      </Tarjeta>
+
+      <div className="flex justify-center">
+        <Link
+          href="/check-in"
+          className="rounded-xl bg-teal-600 px-8 py-4 text-lg font-medium text-white shadow transition hover:bg-teal-700"
+        >
+          Comenzar
+        </Link>
+      </div>
+    </div>
   );
 }

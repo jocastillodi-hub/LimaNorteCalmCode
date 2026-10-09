@@ -1,0 +1,10 @@
+import type { ReactNode } from "react";
+
+export default function Tarjeta({ titulo, children }: { titulo?: string; children: ReactNode }) {
+  return (
+    <section className="rounded-2xl border border-teal-100 bg-white p-5 shadow-sm sm:p-6">
+      {titulo && <h2 className="mb-3 text-lg font-semibold text-teal-800">{titulo}</h2>}
+      {children}
+    </section>
+  );
+}
