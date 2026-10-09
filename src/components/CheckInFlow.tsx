@@ -148,7 +148,7 @@ export default function CheckInFlow() {
           <p className="mt-3 text-sm opacity-80">Esto se basa solo en tus respuestas. No es un diagnóstico.</p>
         </div>
 
-        <div className="panel rounded-3xl bg-white/85 p-6 shadow-sm">
+        <div className="panel rounded-3xl border-2 border-b-4 border-slate-200 bg-white p-6">
           <h2 className="mb-3 text-lg font-semibold text-teal-800">✨ Tus próximos pasos</h2>
           <ul className="flex flex-col gap-3">
             {pasosPracticos[resultado.nivel].map((p) => (

@@ -5,55 +5,67 @@ import { usePathname } from "next/navigation";
 import Racha from "@/components/Racha";
 import { useSesion } from "@/lib/session";
 
-// Navegación corta: lo esencial, sin repetir pantallas.
+// Barra inferior fija con íconos grandes. Los nombres son cálidos a propósito.
 const enlaces = [
-  { href: "/", texto: "💛 Cómo estoy" },
-  { href: "/pausa", texto: "🫁 Pausa" },
-  { href: "/asistente", texto: "💬 Asistente" },
-  { href: "/autocuidado", texto: "🌷 Autocuidado" },
-  { href: "/apoyo", texto: "🤍 Apoyo" },
+  { href: "/", icono: "💛", texto: "Mi Vibra" },
+  { href: "/pausa", icono: "🫧", texto: "Oasis" },
+  { href: "/asistente", icono: "💬", texto: "Charla" },
+  { href: "/autocuidado", icono: "🌷", texto: "Mimos" },
+  { href: "/apoyo", icono: "🛟", texto: "Salvavidas" },
 ];
+
+const emocionesDificiles = ["tristeza", "agotamiento"];
 
 export default function Nav() {
   const pathname = usePathname();
-  const { nocturno, setNocturno } = useSesion();
+  const { nocturno, setNocturno, checkin } = useSesion();
+  const necesitaApoyo = checkin !== null && emocionesDificiles.includes(checkin.emocion);
 
   return (
-    <header className="panel-nav relative z-10 border-b border-white/40 bg-sky-700/80 text-white backdrop-blur">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <Link href="/" className="text-lg font-semibold text-white">
-          🌿 UCV · Bienestar
-        </Link>
-        <nav aria-label="Principal" className="flex flex-wrap gap-1 text-sm">
-          {enlaces.map((e) => {
-            const activo = pathname === e.href;
-            return (
-              <Link
-                key={e.href}
-                href={e.href}
-                aria-current={activo ? "page" : undefined}
-                className={`rounded-full px-3 py-1.5 transition ${
-                  activo ? "bg-cyan-300 font-semibold text-sky-950 shadow" : "text-white hover:bg-white/20"
-                }`}
-              >
-                {e.texto}
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="flex flex-wrap items-center gap-2">
+    <>
+      <header className="panel-nav relative z-10 mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+        <Link href="/" className="text-lg font-extrabold text-sky-900">🌿 UCV · Bienestar</Link>
+        <div className="flex items-center gap-2">
           <Racha />
           <button
             type="button"
             role="switch"
             aria-checked={nocturno}
             onClick={() => setNocturno(!nocturno)}
-            className="rounded-full border border-white/50 px-3 py-1.5 text-sm text-white hover:bg-white/20"
+            className="flex items-center gap-2 rounded-full border-2 border-b-4 border-sky-200 bg-white px-3 py-1.5 text-sm font-bold text-sky-900"
           >
-            {nocturno ? "☀️ Día" : "🌙 Noche"}
+            <span aria-hidden="true">{nocturno ? "🌙" : "☀️"}</span>
+            <span>{nocturno ? "Noche" : "Día"}</span>
           </button>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <nav aria-label="Principal" className="panel-nav fixed inset-x-0 bottom-0 z-40 border-t-4 border-slate-200 bg-white/95 backdrop-blur">
+        <ul className="mx-auto flex max-w-xl justify-around px-2 pb-2 pt-2">
+          {enlaces.map((e) => {
+            const activo = pathname === e.href;
+            const resaltar = e.href === "/apoyo" && necesitaApoyo && !activo;
+            return (
+              <li key={e.href}>
+                <Link
+                  href={e.href}
+                  aria-current={activo ? "page" : undefined}
+                  className={`flex min-w-[4.5rem] flex-col items-center gap-0.5 rounded-2xl px-2 py-1.5 text-xs font-bold transition active:translate-y-0.5 ${
+                    activo
+                      ? "bg-sky-100 text-sky-800"
+                      : resaltar
+                        ? "pulso-suave bg-orange-100 text-orange-700"
+                        : "text-slate-500 hover:bg-slate-100"
+                  }`}
+                >
+                  <span className="text-3xl" aria-hidden="true">{e.icono}</span>
+                  {e.texto}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
   );
 }

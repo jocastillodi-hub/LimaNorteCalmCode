@@ -16,7 +16,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SesionProvider>
           <Escenario>
             <Nav />
-            <main className="relative z-0 mx-auto max-w-5xl px-4 py-8 pb-28 sm:py-10">{children}</main>
+            <main className="relative z-0 mx-auto max-w-5xl px-4 py-6 pb-40 sm:py-8">
+              {children}
+              <footer className="mt-10 text-center text-[11px] font-medium tracking-wide text-sky-950/60">
+                Esta herramienta apoya, no diagnostica.
+              </footer>
+            </main>
           </Escenario>
         </SesionProvider>
       </body>
