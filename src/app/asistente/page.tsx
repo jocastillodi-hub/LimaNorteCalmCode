@@ -66,7 +66,7 @@ export default function Asistente() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-3xl font-bold text-teal-800">💬 Asistente de escucha</h1>
+        <h1 className="text-3xl font-bold text-teal-800">💬 Charla Calma</h1>
         <p className="mt-2 text-slate-600">
           Soy una herramienta automatizada. No soy psicólogo ni un servicio de emergencia.
         </p>

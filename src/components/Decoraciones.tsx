@@ -6,7 +6,7 @@ export function CasaPina({ className = "" }: { className?: string }) {
   // ventanas redondas y hojas arriba. Estilo amigable y de colores cálidos.
   const remaches = [0, 45, 90, 135, 180, 225, 270, 315];
   return (
-    <svg aria-hidden="true" viewBox="0 0 200 260" className={`pointer-events-none ${className}`}>
+    <svg aria-hidden="true" viewBox="0 0 200 260" className={`rebota cursor-pointer ${className}`}>
       {/* Hojas */}
       <path d="M100 42 C78 24 62 10 46 14 C58 26 70 36 100 44 Z" fill="#22c55e" stroke="#15803d" strokeWidth="3" />
       <path d="M100 42 C122 24 138 10 154 14 C142 26 130 36 100 44 Z" fill="#22c55e" stroke="#15803d" strokeWidth="3" />

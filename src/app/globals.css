@@ -71,8 +71,8 @@
 
 /* ---------- Transición entre pantallas ---------- */
 @keyframes entrada {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translate(calc(var(--dir, 1) * 28px), 8px); }
+  to { opacity: 1; transform: none; }
 }
 .entrada { animation: entrada 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
@@ -174,7 +174,69 @@
 .noche .text-slate-600, .noche .text-slate-500 { color: #cbd5e1 !important; }
 .noche .text-teal-800, .noche .text-teal-900 { color: #e0f2fe !important; }
 
+/* ---------- Piña que rebota, algas, medusas y estrella que asoma ---------- */
+@keyframes rebote {
+  0%, 100% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-12px) scale(1.07); }
+  60% { transform: translateY(2px) scale(0.97); }
+}
+.rebota:hover, .rebota:active { animation: rebote 0.6s ease-out; }
+
+@keyframes mecer {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+.alga { transform-origin: bottom center; animation: mecer 6s ease-in-out infinite; }
+
+@keyframes flotar-medusa {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-22px); }
+}
+.medusa-flota { animation: flotar-medusa 9s ease-in-out infinite; }
+
+@keyframes asomar-izq {
+  0%, 62%, 100% { transform: translateX(-100%); }
+  72%, 86% { transform: translateX(-30%); }
+}
+.asomar { animation: asomar-izq 26s ease-in-out infinite; }
+
+/* ---------- Racha: pop ---------- */
+@keyframes pop-racha {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+.racha-pop { animation: pop-racha 0.5s ease-out; }
+
+/* ---------- Aurora: gradiente animado por background-position ---------- */
+@keyframes gradiente-aurora {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.aurora-gradiente {
+  background-size: 200% 200%;
+  animation: gradiente-aurora 18s ease-in-out infinite alternate;
+}
+
+/* ---------- Salvavidas: pulso suave cuando hace falta apoyo ---------- */
+@keyframes pulso-suave {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.6); }
+  50% { box-shadow: 0 0 0 9px rgba(251, 146, 60, 0); }
+}
+.pulso-suave { animation: pulso-suave 2.4s ease-in-out infinite; }
+
+/* ---------- Burbujas al exhalar ---------- */
+@keyframes burbuja-soltar {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  20% { opacity: 0.9; }
+  100% { transform: translateY(-140px) scale(1.1); opacity: 0; }
+}
+.burbuja-soltar { animation: burbuja-soltar 2.6s ease-out forwards; }
+
 @media (prefers-reduced-motion: reduce) {
+  .rebota, .alga, .medusa-flota, .asomar, .racha-pop, .aurora-gradiente, .pulso-suave, .burbuja-soltar {
+    animation: none !important;
+  }
   .caracol-camina, .caracol-cuerpo, .aurora, .aurora-lenta, .aurora-rapida, .plancton, .idle, .entrada {
     animation: none !important;
   }
