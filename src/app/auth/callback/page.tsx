@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Tarjeta from "@/components/Tarjeta";
 import { crearClienteSupabase } from "@/lib/supabase/cliente";
 
-// Destino del enlace mágico: intercambia el código por una sesión y vuelve a Tareas.
+// Destino del enlace por correo: intercambia el código por una sesión y vuelve a Tareas.
 export default function Callback() {
   const router = useRouter();
   const [error, setError] = useState("");
