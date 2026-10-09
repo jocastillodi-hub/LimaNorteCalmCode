@@ -15,10 +15,11 @@ type TareaSemana = {
   dia: number;
   titulo: string;
   area: Area;
+  proyecto: string;
   hecha: boolean;
 };
 
-const COLUMNAS = "id, semana, dia, titulo, area, hecha";
+const COLUMNAS = "id, semana, dia, titulo, area, proyecto, hecha";
 
 export default function Tareas() {
   const [cliente, setCliente] = useState<Cliente | null>(null);
@@ -87,7 +88,12 @@ export default function Tareas() {
   const clienteActual = cliente;
   const usuarioActual = usuario;
 
-  async function agregar(dia: number, titulo: string, area: Area) {
+  async function agregar(dia: number, titulo: string, area: Area, proyecto: string) {
+    const nombreProyecto = proyecto.trim() || "General";
+    if (nombreProyecto.length > 60) {
+      setError("El nombre del proyecto puede tener hasta 60 caracteres.");
+      return;
+    }
     const r = validarTarea({ titulo, area, fecha_limite: "" });
     if (!r.ok) {
       setError(r.error);
@@ -96,7 +102,7 @@ export default function Tareas() {
     setError("");
     const { data, error: e } = await clienteActual
       .from("tareas_semana")
-      .insert({ usuario_id: usuarioActual.id, semana, dia, titulo: r.valor.titulo, area: r.valor.area })
+      .insert({ usuario_id: usuarioActual.id, semana, dia, titulo: r.valor.titulo, area: r.valor.area, proyecto: nombreProyecto })
       .select(COLUMNAS)
       .single();
     if (e || !data) setError("No se pudo guardar la tarea. Inténtalo de nuevo.");
@@ -155,75 +161,151 @@ export default function Tareas() {
 
       {error && <p role="alert" className="rounded-2xl bg-rose-50 px-4 py-3 text-rose-800">{error}</p>}
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {DIAS.map((d) => {
-          const esHoy = esSemanaActual && d.numero === hoyDia;
-          const fecha = sumarDias(semana, d.numero - 1).split("-").reverse().slice(0, 2).join("/");
-          return (
-            <section
-              key={d.numero}
-              aria-labelledby={`dia-${d.numero}`}
-              className={`flex flex-col gap-3 rounded-3xl border-2 border-b-4 p-4 ${esHoy ? "border-sky-400 bg-sky-50" : "border-slate-200 bg-white"}`}
-            >
-              <h2 id={`dia-${d.numero}`} className="flex items-baseline justify-between font-extrabold text-slate-800">
-                {d.nombre}
-                <span className="text-xs font-semibold text-slate-500">{fecha}{esHoy && " · hoy"}</span>
-              </h2>
-              <ul className="flex flex-col gap-2">
-                {(porDia[d.numero] ?? []).map((t) => (
-                  <li key={t.id} className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-2 py-2">
-                    <input
-                      type="checkbox"
-                      checked={t.hecha}
-                      onChange={() => alternar(t)}
-                      aria-label={`Marcar como ${t.hecha ? "pendiente" : "hecha"}: ${t.titulo}`}
-                      className="h-5 w-5 shrink-0 accent-sky-600"
-                    />
-                    <span className={`min-w-0 flex-1 truncate text-sm ${t.hecha ? "text-slate-400 line-through" : "text-slate-800"}`}>
-                      {AREAS.find((a) => a.valor === t.area)?.texto.split(" ")[0]} {t.titulo}
-                    </span>
-                    <button type="button" onClick={() => eliminar(t.id)} aria-label={`Borrar ${t.titulo}`} className="shrink-0 rounded-lg px-1 text-rose-700 hover:bg-rose-50">✕</button>
-                  </li>
-                ))}
-              </ul>
-              <NuevaTarea onAgregar={(titulo, area) => agregar(d.numero, titulo, area)} dia={d.nombre} />
-            </section>
-          );
-        })}
-      </div>
+      <TablaSemanal
+        tareas={tareas}
+        semana={semana}
+        hoyDia={esSemanaActual ? hoyDia : 0}
+        onAgregar={agregar}
+        onAlternar={alternar}
+        onEliminar={eliminar}
+      />
     </div>
   );
 }
 
-function NuevaTarea({ onAgregar, dia }: { onAgregar: (titulo: string, area: Area) => void; dia: string }) {
+// Tabla: cada fila es una tarea de un proyecto; cada columna es un día de la semana.
+function TablaSemanal({
+  tareas,
+  semana,
+  hoyDia,
+  onAgregar,
+  onAlternar,
+  onEliminar,
+}: {
+  tareas: TareaSemana[];
+  semana: string;
+  hoyDia: number;
+  onAgregar: (dia: number, titulo: string, area: Area, proyecto: string) => void;
+  onAlternar: (t: TareaSemana) => void;
+  onEliminar: (id: string) => void;
+}) {
+  const filas = useMemo(() => {
+    const mapa = new Map<string, { clave: string; proyecto: string; titulo: string; area: Area; porDia: Record<number, TareaSemana> }>();
+    for (const t of tareas) {
+      const clave = `${t.proyecto}\u0000${t.titulo}`;
+      if (!mapa.has(clave)) mapa.set(clave, { clave, proyecto: t.proyecto, titulo: t.titulo, area: t.area, porDia: {} });
+      mapa.get(clave)!.porDia[t.dia] = t;
+    }
+    return [...mapa.values()];
+  }, [tareas]);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="overflow-x-auto rounded-3xl border-2 border-b-4 border-slate-200 bg-white">
+        <table className="w-full min-w-[46rem] border-collapse text-sm">
+          <caption className="sr-only">Tareas de la semana por proyecto y día</caption>
+          <thead>
+            <tr className="bg-sky-50 text-left text-slate-700">
+              <th scope="col" className="sticky left-0 z-10 bg-sky-50 px-3 py-3">Proyecto</th>
+              <th scope="col" className="px-3 py-3">Tarea</th>
+              {DIAS.map((d) => (
+                <th
+                  key={d.numero}
+                  scope="col"
+                  className={`px-2 py-3 text-center ${d.numero === hoyDia ? "bg-sky-200 font-extrabold text-sky-900" : ""}`}
+                >
+                  <span className="block">{d.nombre.slice(0, 3)}</span>
+                  <span className="block text-xs font-normal text-slate-500">{sumarDias(semana, d.numero - 1).split("-").reverse().slice(0, 2).join("/")}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filas.length === 0 && (
+              <tr>
+                <td colSpan={9} className="px-3 py-6 text-center text-slate-500">Aún no hay tareas esta semana. Agrega una abajo 🌱</td>
+              </tr>
+            )}
+            {filas.map((f) => (
+              <tr key={f.clave} className="border-t border-slate-200">
+                <td className="sticky left-0 z-10 bg-white px-3 py-2 font-semibold text-slate-600">{f.proyecto}</td>
+                <td className="px-3 py-2 font-bold text-slate-800">{AREAS.find((a) => a.valor === f.area)?.texto.split(" ")[0]} {f.titulo}</td>
+                {DIAS.map((d) => {
+                  const t = f.porDia[d.numero];
+                  return (
+                    <td key={d.numero} className={`px-2 py-2 text-center ${d.numero === hoyDia ? "bg-sky-50" : ""}`}>
+                      {t ? (
+                        <div className="flex items-center justify-center gap-1">
+                          <input
+                            type="checkbox"
+                            checked={t.hecha}
+                            onChange={() => onAlternar(t)}
+                            aria-label={`${f.titulo} el ${d.nombre}: ${t.hecha ? "hecha" : "pendiente"}`}
+                            className="h-5 w-5 accent-sky-600"
+                          />
+                          <button type="button" onClick={() => onEliminar(t.id)} aria-label={`Borrar ${f.titulo} del ${d.nombre}`} className="rounded px-1 text-rose-600 hover:bg-rose-50">✕</button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => onAgregar(d.numero, f.titulo, f.area, f.proyecto)}
+                          aria-label={`Añadir ${f.titulo} el ${d.nombre}`}
+                          className="h-7 w-7 rounded-full border-2 border-dashed border-slate-300 text-slate-400 hover:border-sky-400 hover:text-sky-600"
+                        >
+                          +
+                        </button>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <FilaNueva hoyDia={hoyDia || 1} onAgregar={(dia, titulo, area, proyecto) => onAgregar(dia, titulo, area, proyecto)} />
+    </div>
+  );
+}
+
+function FilaNueva({ hoyDia, onAgregar }: { hoyDia: number; onAgregar: (dia: number, titulo: string, area: Area, proyecto: string) => void }) {
+  const [proyecto, setProyecto] = useState("");
   const [titulo, setTitulo] = useState("");
   const [area, setArea] = useState<Area>("otra");
+  const [dia, setDia] = useState(hoyDia);
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         if (!titulo.trim()) return;
-        onAgregar(titulo, area);
+        onAgregar(dia, titulo, area, proyecto);
         setTitulo("");
       }}
-      className="mt-auto flex flex-col gap-2"
+      className="grid gap-3 rounded-3xl border-2 border-b-4 border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-5"
     >
-      <label htmlFor={`nueva-${dia}`} className="sr-only">Nueva tarea para el {dia}</label>
-      <input
-        id={`nueva-${dia}`}
-        value={titulo}
-        onChange={(e) => setTitulo(e.target.value)}
-        maxLength={120}
-        placeholder="+ Nueva tarea"
-        className="rounded-xl border-2 border-slate-200 px-3 py-2 text-sm outline-none focus:border-sky-400"
-      />
-      <div className="flex gap-2">
-        <label className="sr-only" htmlFor={`area-${dia}`}>Área</label>
-        <select id={`area-${dia}`} value={area} onChange={(e) => setArea(e.target.value as Area)} className="min-w-0 flex-1 rounded-xl border-2 border-slate-200 bg-white px-2 py-1 text-sm">
+      <p className="text-sm font-bold text-slate-700 lg:col-span-5">➕ Nueva fila</p>
+      <label className="flex flex-col text-xs font-semibold text-slate-600">
+        Proyecto
+        <input value={proyecto} onChange={(e) => setProyecto(e.target.value)} maxLength={60} placeholder="General" className="mt-1 rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-normal" />
+      </label>
+      <label className="flex flex-col text-xs font-semibold text-slate-600 sm:col-span-1">
+        Tarea
+        <input value={titulo} onChange={(e) => setTitulo(e.target.value)} maxLength={120} placeholder="Ej.: Redactar capítulo 2" className="mt-1 rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-normal" />
+      </label>
+      <label className="flex flex-col text-xs font-semibold text-slate-600">
+        Área
+        <select value={area} onChange={(e) => setArea(e.target.value as Area)} className="mt-1 rounded-xl border-2 border-slate-200 bg-white px-2 py-2 text-sm font-normal">
           {AREAS.map((a) => <option key={a.valor} value={a.valor}>{a.texto}</option>)}
         </select>
-        <button type="submit" className="rounded-xl border-b-4 border-sky-700 bg-sky-500 px-3 py-1 text-sm font-bold text-white hover:bg-sky-600">Añadir</button>
-      </div>
+      </label>
+      <label className="flex flex-col text-xs font-semibold text-slate-600">
+        Día
+        <select value={dia} onChange={(e) => setDia(Number(e.target.value))} className="mt-1 rounded-xl border-2 border-slate-200 bg-white px-2 py-2 text-sm font-normal">
+          {DIAS.map((d) => <option key={d.numero} value={d.numero}>{d.nombre}</option>)}
+        </select>
+      </label>
+      <button type="submit" className="self-end rounded-2xl border-b-4 border-sky-700 bg-sky-500 px-4 py-2 font-bold text-white hover:bg-sky-600">Añadir</button>
     </form>
   );
 }
