@@ -8,10 +8,10 @@ import type { ChatMensaje } from "@/lib/types";
 import { emergencia } from "@/lib/config";
 
 const opciones = [
-  { texto: "Quiero desahogarme", prompt: "Necesito desahogarme un momento." },
-  { texto: "Ordenar mis ideas", prompt: "Tengo muchas ideas mezcladas y quiero ordenarlas." },
-  { texto: "Buscar una estrategia", prompt: "¿Me ayudas a encontrar una estrategia para manejar mi carga académica?" },
-  { texto: "Planificar una acción", prompt: "Quiero planificar una acción pequeña para hoy." },
+  { texto: "🫂 Quiero desahogarme", prompt: "Necesito desahogarme un momento." },
+  { texto: "🧩 Ordenar mis ideas", prompt: "Tengo muchas ideas mezcladas y quiero ordenarlas." },
+  { texto: "🧭 Buscar una estrategia", prompt: "¿Me ayudas a encontrar una estrategia para manejar mi carga académica?" },
+  { texto: "🗓️ Planificar una acción", prompt: "Quiero planificar una acción pequeña para hoy." },
 ];
 
 export default function Asistente() {
@@ -66,7 +66,7 @@ export default function Asistente() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-3xl font-bold text-teal-800">Asistente de escucha</h1>
+        <h1 className="text-3xl font-bold text-teal-800">💬 Asistente de escucha</h1>
         <p className="mt-2 text-slate-600">
           Soy una herramienta automatizada. No soy psicólogo ni un servicio de emergencia.
         </p>
@@ -101,14 +101,14 @@ export default function Asistente() {
         ))}
       </div>
 
-      <div className="flex min-h-72 flex-col gap-3 rounded-2xl border border-teal-100 bg-white p-4" aria-live="polite">
-        {chat.length === 0 && <p className="m-auto text-center text-slate-500">Escribe lo que sientes, sin filtros. Puedes empezar con una de las opciones de arriba.</p>}
+      <div className="flex min-h-72 flex-col gap-3 rounded-3xl bg-white/85 p-4 shadow-sm" aria-live="polite">
+        {chat.length === 0 && <p className="m-auto text-center text-slate-500">🌤️ Escribe lo que sientes, sin filtros. Puedes empezar con una de las opciones de arriba.</p>}
         {chat.map((m, i) => (
-          <div key={i} className={`max-w-[85%] rounded-2xl px-4 py-2 ${m.rol === "usuario" ? "self-end bg-teal-600 text-white" : "self-start bg-teal-50 text-slate-800"}`}>
+          <div key={i} className={`max-w-[85%] whitespace-pre-line rounded-2xl px-4 py-2 shadow-sm ${m.rol === "usuario" ? "self-end bg-teal-600 text-white" : "self-start bg-teal-50 text-slate-800"}`}>
             {m.texto}
           </div>
         ))}
-        {cargando && <p className="self-start text-sm text-slate-500">Escribiendo…</p>}
+        {cargando && <p className="self-start animate-pulse text-sm text-slate-500">🤔 Pensando contigo…</p>}
         <div ref={fin} />
       </div>
 
@@ -127,7 +127,7 @@ export default function Asistente() {
           value={entrada}
           onChange={(e) => setEntrada(e.target.value.slice(0, 1500))}
           rows={2}
-          placeholder="Cuéntame lo que sientes…"
+          placeholder="Cuéntame lo que sientes… 💭"
           className="min-w-0 flex-1 resize-none rounded-xl border border-teal-200 px-4 py-3 outline-none focus:ring-2 focus:ring-teal-400"
         />
         <Boton type="submit" disabled={cargando || !entrada.trim()}>Enviar</Boton>

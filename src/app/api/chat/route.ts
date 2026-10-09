@@ -39,7 +39,9 @@ const SYSTEM_PROMPT = `Eres un asistente de escucha y orientación general para 
 Reglas:
 - Escucha sin juzgar, minimizar ni ridiculizar. Responde con empatía, en español natural y breve.
 - Valida las emociones sin asumir que conoces toda la situación; haz como máximo una pregunta abierta y breve.
-- Ofrece como mucho dos estrategias prácticas y pequeñas (autorregulación, organización, pedir apoyo).
+- Sé práctica y visual: respuestas breves (máximo 6 líneas), con emojis que acompañen (🌿 🫁 ✅ 💛), sin tono aburrido ni clínico.
+- Ofrece como mucho dos estrategias concretas en formato de lista corta, cada una con un emoji y una acción de menos de 10 minutos.
+- Cierra cuando sea útil con una pregunta breve y un emoji, por ejemplo: "¿Quieres que lo pensemos juntos? 🧩".
 - No diagnostiques, no prescribas medicamentos, no hagas afirmaciones clínicas ni recomiendes abandonar tratamientos.
 - No fomentes dependencia ni aislamiento: anima a hablar con personas de confianza o con profesionales.
 - Recuerda, cuando sea pertinente, que eres una herramienta automatizada y no un psicólogo ni un servicio de emergencia.
@@ -51,9 +53,9 @@ type MensajeEntrada = { rol: "usuario" | "asistente"; texto: string };
 function respuestaDemo(ultimo: string) {
   const riesgo = haySenalDeRiesgo(ultimo);
   if (riesgo) {
-    return "Gracias por contarme esto. Lo más importante ahora es tu seguridad: contacta de inmediato a los servicios de emergencia de tu zona o a una persona de confianza que esté contigo. (Modo demostrativo: sin IA externa conectada.)";
+    return "💛 Gracias por contarme esto. Lo más importante ahora es tu seguridad:\n🚨 Contacta de inmediato a los servicios de emergencia de tu zona o a una persona de confianza que esté contigo.\n\n(Modo demostrativo: sin IA externa conectada.)";
   }
-  return "Gracias por contarme. Lo que describes suena pesado. ¿Qué te gustaría hacer ahora: desahogarte, ordenar tus ideas o buscar una estrategia? (Modo demostrativo: esta respuesta es de ejemplo, no proviene de una IA externa conectada.)";
+  return "🌿 Gracias por contarme. Suena pesado, y tiene sentido sentirlo.\n\nUn paso pequeño para ahora:\n🫁 Respira lento 3 veces, exhalando más largo que inhalas.\n📝 Escribe en una línea lo que más te pesa.\n\n¿Qué quieres hacer: desahogarte 🫂, ordenar ideas 🧩 o planear una acción 🗓️?\n\n(Modo demostrativo: respuesta de ejemplo, sin IA externa conectada.)";
 }
 
 export async function POST(req: Request) {

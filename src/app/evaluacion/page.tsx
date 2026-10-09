@@ -7,7 +7,7 @@ import Tarjeta from "@/components/Tarjeta";
 import { diferenciaTension } from "@/lib/evaluacion";
 import { useSesion } from "@/lib/session";
 
-const sentimientos = ["Más tranquilo/a", "Igual", "Más cansado/a", "Más preocupado/a", "Con más claridad", "Otro"];
+const sentimientos = ["😌 Más tranquilo/a", "😐 Igual", "🥱 Más cansado/a", "😟 Más preocupado/a", "✨ Con más claridad", "🌀 Otro"];
 
 export default function Evaluacion() {
   const { tensionAntes, evaluacion, setEvaluacion, reiniciar } = useSesion();
@@ -27,11 +27,11 @@ export default function Evaluacion() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold text-teal-800">¿Cómo te sientes ahora?</h1>
+        <h1 className="text-3xl font-bold text-teal-800">💭 ¿Cómo te sientes ahora?</h1>
         <p className="mt-2 text-slate-600">Tus respuestas son una percepción tuya, no una medición clínica.</p>
       </div>
 
-      <Tarjeta titulo="Tensión ahora (1 = nada, 5 = mucha)">
+      <Tarjeta titulo="🌡️ Tensión ahora (1 = nada, 5 = mucha)">
         <div role="radiogroup" aria-label="Tensión ahora" className="flex gap-2">
           {[1, 2, 3, 4, 5].map((n) => (
             <button
@@ -87,7 +87,7 @@ export default function Evaluacion() {
           ) : (
             <p>
               Respuesta guardada.{" "}
-              {tensionAntes === null && "Si haces el check-in, podremos comparar tu tensión antes y después."}
+              {tensionAntes === null && "Si haces el check-in, podremos comparar tu tensión antes y después. 🌱"}
             </p>
           )}
           {evaluacion.accion && <p className="mt-2">Tu siguiente paso: {evaluacion.accion}</p>}
@@ -95,7 +95,7 @@ export default function Evaluacion() {
       )}
 
       <div className="flex flex-wrap gap-3">
-        <Link href="/pausa" className="rounded-xl border border-teal-300 bg-white px-4 py-2 font-medium text-teal-800 hover:bg-teal-50">Otra pausa</Link>
+        <Link href="/pausa" className="rounded-xl border border-teal-300 bg-white px-4 py-2 font-medium text-teal-800 hover:bg-teal-50">🫁 Otra pausa</Link>
         <Link href="/prioridades" className="rounded-xl border border-teal-300 bg-white px-4 py-2 font-medium text-teal-800 hover:bg-teal-50">Revisar prioridades</Link>
         <Link href="/" onClick={reiniciar} className="rounded-xl bg-slate-700 px-4 py-2 font-medium text-white hover:bg-slate-800">
           Finalizar sesión y volver al inicio

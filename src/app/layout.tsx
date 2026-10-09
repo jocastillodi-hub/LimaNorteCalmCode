@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import FondoCalma from "@/components/FondoCalma";
 import Nav from "@/components/Nav";
 import { SesionProvider } from "@/lib/session";
 
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className="min-h-dvh bg-teal-50 font-sans text-slate-800 antialiased">
+      <body className="min-h-dvh font-sans text-slate-800 antialiased">
+        <FondoCalma />
         <SesionProvider>
           <Nav />
           <main className="mx-auto max-w-5xl px-4 py-8 sm:py-10">{children}</main>

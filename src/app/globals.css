@@ -4,6 +4,27 @@
   color-scheme: light;
 }
 
+@keyframes flotar {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -20px) scale(1.06); }
+}
+
+@keyframes ondear {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-40px); }
+}
+
+@keyframes respirar {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.04); }
+}
+
+.fondo-blob { animation: flotar 14s ease-in-out infinite; }
+.fondo-blob-lento { animation: flotar 22s ease-in-out infinite reverse; }
+.fondo-onda { animation: ondear 12s ease-in-out infinite; }
+.fondo-onda-lenta { animation: ondear 18s ease-in-out infinite reverse; }
+.fondo-respira { transform-origin: center; transform-box: fill-box; animation: respirar 8s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

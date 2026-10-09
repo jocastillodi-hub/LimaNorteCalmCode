@@ -26,13 +26,13 @@ export default function Autocuidado() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold text-teal-800">Autocuidado y emociones</h1>
+        <h1 className="text-3xl font-bold text-teal-800">🌷 Autocuidado y emociones</h1>
         <p className="mt-2 text-slate-600">Ninguna actividad es obligatoria. Elige lo que te sirva hoy.</p>
       </div>
 
-      <Tarjeta titulo="Identifica lo que sientes">
+      <Tarjeta titulo="💛 Identifica lo que sientes">
         <div className="flex flex-wrap gap-2" role="group" aria-label="Emociones">
-          {emociones.map(([v, t]) => (
+          {emociones.map(([v, t, e]) => (
             <button
               key={v}
               type="button"
@@ -40,7 +40,7 @@ export default function Autocuidado() {
               onClick={() => setEmocionNota({ ...emocionNota, emocion: v })}
               className={`rounded-full border px-4 py-2 text-sm transition ${emocionNota.emocion === v ? "border-teal-600 bg-teal-600 text-white" : "border-teal-200 bg-white text-teal-800 hover:bg-teal-50"}`}
             >
-              {t}
+              <span aria-hidden="true">{e} </span>{t}
             </button>
           ))}
         </div>
@@ -58,7 +58,7 @@ export default function Autocuidado() {
         )}
       </Tarjeta>
 
-      <Tarjeta titulo="Ejercicios breves">
+      <Tarjeta titulo="🧘 Ejercicios breves">
         <ul className="flex flex-col gap-2">
           {ejercicios.map((e, i) => (
             <li key={e.titulo} className="rounded-xl border border-teal-100">
@@ -77,13 +77,13 @@ export default function Autocuidado() {
         </ul>
       </Tarjeta>
 
-      <Tarjeta titulo="Preguntas para reflexionar">
+      <Tarjeta titulo="🪞 Preguntas para reflexionar">
         <ul className="list-disc space-y-2 pl-5 text-slate-700">
           {reflexiones.map((r) => <li key={r}>{r}</li>)}
         </ul>
       </Tarjeta>
 
-      <Tarjeta titulo="Pedir apoyo">
+      <Tarjeta titulo="🤍 Pedir apoyo">
         <p className="text-slate-700">
           Hablar con alguien de confianza puede aliviar mucho. Si lo necesitas, visita la sección de{" "}
           <a href="/apoyo" className="font-medium text-teal-700 underline">apoyo psicológico</a>.
