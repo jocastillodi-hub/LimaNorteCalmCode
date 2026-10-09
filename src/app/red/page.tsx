@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Tarjeta from "@/components/Tarjeta";
-import { CURSOS, filtrarCursos, validarIdea, type Curso, type Idea } from "@/lib/red";
+import { filtrarCursos, validarIdea, type Curso, type Idea } from "@/lib/red";
 
 type Propia = Idea;
 
