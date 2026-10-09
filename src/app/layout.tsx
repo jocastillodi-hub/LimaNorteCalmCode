@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Burbujas from "@/components/Burbujas";
 import FondoFluido from "@/components/FondoFluido";
 import Nav from "@/components/Nav";
 import { SesionProvider } from "@/lib/session";
@@ -14,9 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es">
       <body className="min-h-dvh font-sans text-slate-800 antialiased">
         <FondoFluido />
+        <Burbujas />
         <SesionProvider>
           <Nav />
-          <main className="mx-auto max-w-5xl px-4 py-8 sm:py-10">{children}</main>
+          <main className="relative z-0 mx-auto max-w-5xl px-4 py-8 sm:py-10">{children}</main>
         </SesionProvider>
       </body>
     </html>

@@ -19,9 +19,9 @@ export default function Nav() {
   const { reiniciar } = useSesion();
 
   return (
-    <header className="border-b border-white/60 bg-white/70 backdrop-blur">
+    <header className="relative z-10 border-b border-white/40 bg-sky-700/80 text-white backdrop-blur">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <Link href="/" className="text-lg font-semibold text-teal-700">
+        <Link href="/" className="text-lg font-semibold text-white">
           🌿 UCV · Bienestar
         </Link>
         <nav aria-label="Principal" className="flex flex-wrap gap-1 text-sm">
@@ -33,7 +33,7 @@ export default function Nav() {
                 href={e.href}
                 aria-current={activo ? "page" : undefined}
                 className={`rounded-full px-3 py-1.5 transition ${
-                  activo ? "bg-teal-600 text-white" : "text-teal-800 hover:bg-white"
+                  activo ? "bg-cyan-300 font-semibold text-sky-950 shadow" : "text-white hover:bg-white/20"
                 }`}
               >
                 {e.texto}
@@ -44,7 +44,7 @@ export default function Nav() {
         <button
           type="button"
           onClick={reiniciar}
-          className="rounded-full border border-teal-300 bg-white/70 px-3 py-1.5 text-sm text-teal-800 hover:bg-white"
+          className="rounded-full border border-white/50 px-3 py-1.5 text-sm text-white hover:bg-white/20"
         >
           🧹 Borrar sesión
         </button>

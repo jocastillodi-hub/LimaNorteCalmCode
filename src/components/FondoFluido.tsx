@@ -43,7 +43,7 @@ export default function FondoFluido() {
           vx: vx * 0.25 + aleatorio(-0.4, 0.4),
           vy: vy * 0.25 + aleatorio(-0.4, 0.4),
           vida: 1,
-          hue: aleatorio(165, 275), // de turquesa a violeta
+          hue: aleatorio(180, 215), // tonos de agua: turquesa a azul
           r: radio * aleatorio(0.8, 1.2),
         });
       }
@@ -114,7 +114,12 @@ export default function FondoFluido() {
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 via-teal-50 to-violet-100" />
+      <div className="absolute inset-0 bg-gradient-to-b from-sky-300 via-cyan-200 to-teal-100" />
+      {/* Rayos de luz desde la superficie */}
+      <div className="absolute -top-24 left-1/4 h-[120%] w-40 rotate-12 bg-white/15 blur-2xl" />
+      <div className="absolute -top-24 right-1/4 h-[120%] w-24 -rotate-12 bg-white/10 blur-2xl" />
+      {/* Arena del fondo marino */}
+      <div className="absolute inset-x-0 bottom-0 h-28 rounded-t-[50%] bg-gradient-to-t from-amber-200 to-amber-100/80" />
       <canvas ref={ref} className="absolute inset-0 h-full w-full" />
     </div>
   );

@@ -47,8 +47,8 @@ function Opciones<T extends string>({
           role="radio"
           aria-checked={valor === v}
           onClick={() => onElegir(v)}
-          className={`flex flex-col items-center gap-1 rounded-2xl border-2 p-4 text-sm font-medium transition hover:scale-[1.03] ${
-            valor === v ? "border-teal-500 bg-teal-50 shadow-md" : "border-transparent bg-white shadow-sm"
+          className={`esponja flex flex-col items-center gap-1 rounded-[1.75rem] border-2 p-4 text-sm font-semibold text-amber-950 ${
+            valor === v ? "border-cyan-500 bg-cyan-100 shadow-md" : "border-transparent bg-amber-50 shadow-sm"
           }`}
         >
           <span className="text-4xl" aria-hidden="true">{e}</span>
@@ -83,8 +83,8 @@ function EscalaEmoji({
             aria-checked={valor === n}
             aria-label={`${n} de 5`}
             onClick={() => onElegir(n)}
-            className={`flex h-16 flex-1 flex-col items-center justify-center rounded-2xl border-2 transition hover:scale-105 ${
-              valor === n ? "border-teal-500 bg-teal-50 shadow-md" : "border-transparent bg-white shadow-sm"
+            className={`esponja flex h-16 flex-1 flex-col items-center justify-center rounded-[1.5rem] border-2 ${
+              valor === n ? "border-cyan-500 bg-cyan-100 shadow-md" : "border-transparent bg-amber-50 shadow-sm"
             }`}
           >
             <span className="text-3xl" aria-hidden="true">{emojis[n - 1]}</span>
@@ -170,8 +170,8 @@ export default function CheckInFlow() {
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
       <div>
         <div className="flex items-center justify-between text-sm text-slate-600">
-          <span>Paso {paso + 1} de {total}</span>
-          <span aria-hidden="true">{"🌱".repeat(paso + 1)}</span>
+          <span className="font-medium text-sky-900">Paso {paso + 1} de {total}</span>
+          <span aria-hidden="true">{"🫧".repeat(paso + 1)}</span>
         </div>
         <div
           role="progressbar"
@@ -179,16 +179,16 @@ export default function CheckInFlow() {
           aria-valuemax={total}
           aria-valuenow={paso + 1}
           aria-label="Avance del check-in"
-          className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/70"
+          className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/60"
         >
-          <div className="h-full rounded-full bg-gradient-to-r from-teal-400 to-violet-400 transition-all duration-500" style={{ width: `${((paso + 1) / total) * 100}%` }} />
+          <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-sky-500 transition-all duration-500" style={{ width: `${((paso + 1) / total) * 100}%` }} />
         </div>
       </div>
 
-      <section key={paso} className="rounded-3xl bg-white/85 p-6 shadow-md sm:p-8" aria-labelledby="titulo-paso">
+      <section key={paso} className="cuadro-pina rounded-[2.5rem] p-6 sm:p-10" aria-labelledby="titulo-paso">
         <p className="text-5xl" aria-hidden="true">{actual.emoji}</p>
-        <h1 id="titulo-paso" className="mt-2 text-2xl font-bold text-teal-800 sm:text-3xl">{actual.titulo}</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 id="titulo-paso" className="mt-2 text-2xl font-bold text-amber-950 sm:text-3xl">{actual.titulo}</h1>
+        <p className="mt-1 text-sm text-amber-900/80">
           {actual.opcional ? "Opcional: puedes saltarla." : "Responde con lo que sientas. Puedes volver atrás cuando quieras."}
         </p>
 
@@ -228,7 +228,7 @@ export default function CheckInFlow() {
               Saltar
             </button>
           )}
-          <Boton onClick={siguiente} disabled={!actual.listo} className="px-8">
+          <Boton onClick={siguiente} disabled={!actual.listo} className="rounded-full bg-sky-600 px-8 hover:bg-sky-700">
             {ultimo ? "Ver mi orientación ✨" : "Siguiente →"}
           </Boton>
         </div>
