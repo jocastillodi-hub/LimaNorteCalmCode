@@ -55,6 +55,14 @@ Sin `ANTHROPIC_API_KEY`, el asistente funciona en **modo demostrativo** y lo ind
 2. `ANTHROPIC_MODEL` por defecto es `claude-haiku-5-5`.
 3. Completa `NEXT_PUBLIC_UCV_PSICOLOGIA_URL`, `NEXT_PUBLIC_UCV_PSICOLOGIA_CONTACTO` y `NEXT_PUBLIC_EMERGENCIA_CONTACTO` **solo con datos verificados** en fuentes oficiales. Mientras estén vacíos, la app muestra que están pendientes y no inventa datos.
 
+## Calidad
+
+```bash
+npm run typecheck   # TypeScript
+npm run lint        # ESLint (config de Next.js)
+npm run test        # Vitest: lógica de check-in, prioridades y detección de riesgo
+```
+
 ## Desplegar en Vercel
 
 1. Importa el repositorio en Vercel (Framework: Next.js).
@@ -64,7 +72,8 @@ Sin `ANTHROPIC_API_KEY`, el asistente funciona en **modo demostrativo** y lo ind
 ## Limitaciones
 
 - Es un MVP: no sustituye atención profesional ni servicios de emergencia.
-- El límite de solicitudes por IP vive en memoria; en serverless cada instancia tiene su propio contador. Para un control real usa un almacén compartido (p. ej. Upstash/Redis).
+- El límite de solicitudes (por IP y global) vive en memoria; en serverless cada instancia tiene su propio contador. Para un control real usa un almacén compartido (p. ej. Upstash/Redis) y un límite de gasto en la consola de Anthropic.
+- `npm audit` reporta vulnerabilidades en Next.js 15 (incluido su PostCSS interno) que solo se corrigen actualizando a Next.js 16, un cambio mayor pendiente de evaluar.
 - La detección de riesgo es por palabras clave y es orientativa.
 - La guía de voz depende de que el navegador soporte síntesis de voz.
 - El contenido de prioridades y ejercicios es genérico y debe revisarse con especialistas antes de un uso real.
