@@ -223,3 +223,26 @@
   100% { transform: scale(1); }
 }
 .racha-pop { animation: pop-racha 0.5s ease-out; }
+
+/* ---------- Laboratorio: apertura desde la misión y pulso en vivo ---------- */
+@keyframes abrir-laboratorio {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+.abrir-laboratorio { animation: abrir-laboratorio 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes pulso-vivo {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.4; }
+}
+.pulso-vivo { animation: pulso-vivo 1.8s ease-in-out infinite; }
+
+@keyframes respirar-avatar {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.pulso-respira { animation: respirar-avatar 3.2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .abrir-laboratorio, .pulso-vivo, .pulso-respira { animation: none !important; }
+}

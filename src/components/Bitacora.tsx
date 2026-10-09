@@ -33,7 +33,7 @@ type Borrador = { titulo: string; fecha: string; calendarioAbierto: boolean };
 // Modal con el planificador. Cada columna es un día con fecha exacta.
 // Las misiones se guardan con su fecha y aparecen al navegar hasta esa semana.
 export default function Bitacora() {
-  const { misiones, setMisiones, guardarBitacora, setGuardarBitacora, bitacoraAbierta: abierta, setBitacoraAbierta } = useSesion();
+  const { misiones, setMisiones, guardarBitacora, setGuardarBitacora, bitacoraAbierta: abierta, setBitacoraAbierta, setLaboratorioId } = useSesion();
   const onCerrar = () => setBitacoraAbierta(false);
   const [semana, setSemana] = useState(() => lunesDe());
   const [expandida, setExpandida] = useState<string | null>(null);
@@ -222,6 +222,13 @@ export default function Bitacora() {
                                 <button type="button" onClick={() => dividir(m)} className="rounded-xl bg-sky-500 px-2 py-1 text-xs font-bold text-white">Dividir</button>
                               </div>
                             )}
+                            <button
+                              type="button"
+                              onClick={() => { setLaboratorioId(m.id); setBitacoraAbierta(false); }}
+                              className="rounded-xl border-b-4 border-violet-600 bg-violet-400 px-3 py-2 text-xs font-bold text-white hover:bg-violet-500"
+                            >
+                              🧪 Entrar al laboratorio
+                            </button>
                             <div className="flex justify-between text-xs">
                               <button type="button" onClick={() => moverAManana(m.id)} className="font-bold text-sky-700">→ Mañana</button>
                               <button type="button" onClick={() => eliminar(m.id)} className="font-bold text-rose-700">Quitar</button>

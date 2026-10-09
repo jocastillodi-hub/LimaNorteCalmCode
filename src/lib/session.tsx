@@ -28,6 +28,8 @@ type Sesion = {
   registrarActividad: () => void;
   bitacoraAbierta: boolean;
   setBitacoraAbierta: (v: boolean) => void;
+  laboratorioId: string | null;
+  setLaboratorioId: (id: string | null) => void;
   misiones: Mision[];
   setMisiones: (m: Mision[] | ((prev: Mision[]) => Mision[])) => void;
   guardarBitacora: boolean;
@@ -51,6 +53,7 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   const [misiones, setMisiones] = useState<Mision[]>([]);
   const [guardarBitacora, setGuardarBitacora] = useState(false);
   const [bitacoraAbierta, setBitacoraAbierta] = useState(false);
+  const [laboratorioId, setLaboratorioId] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -109,13 +112,15 @@ export function SesionProvider({ children }: { children: ReactNode }) {
       registrarActividad,
       bitacoraAbierta,
       setBitacoraAbierta,
+      laboratorioId,
+      setLaboratorioId,
       misiones,
       setMisiones,
       guardarBitacora,
       setGuardarBitacora,
       reiniciar,
     }),
-    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, nocturno, racha, registrarActividad, misiones, guardarBitacora, bitacoraAbierta, reiniciar],
+    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, nocturno, racha, registrarActividad, misiones, guardarBitacora, bitacoraAbierta, laboratorioId, reiniciar],
   );
 
   return <SesionContext.Provider value={valor}>{children}</SesionContext.Provider>;

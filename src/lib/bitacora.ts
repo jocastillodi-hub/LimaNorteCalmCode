@@ -10,6 +10,7 @@ export type Mision = {
   hecha: boolean;
   pasos: Paso[];
   vence: string | null; // ISO 8601 con hora, opcional
+  notas?: string; // lo que el estudiante escribe en su mesa de trabajo
 };
 
 export type EstadoTiempo = "sin_hora" | "lejos" | "pronto" | "esperando";

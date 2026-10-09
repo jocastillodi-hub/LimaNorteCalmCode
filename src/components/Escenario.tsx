@@ -6,6 +6,7 @@ import Burbujas from "@/components/Burbujas";
 import Caracol from "@/components/Caracol";
 import FondoFluido from "@/components/FondoFluido";
 import FondoNoche from "@/components/FondoNoche";
+import Laboratorio from "@/components/Laboratorio";
 import OndaClic from "@/components/OndaClic";
 import RecordatorioBurbuja from "@/components/RecordatorioBurbuja";
 import Vida from "@/components/Vida";
@@ -28,6 +29,7 @@ export default function Escenario({ children }: { children: ReactNode }) {
       <Caracol />
       <div className="relative z-0">{children}</div>
       <RecordatorioBurbuja />
+      <Laboratorio />
       <BotonSOS />
     </div>
   );
