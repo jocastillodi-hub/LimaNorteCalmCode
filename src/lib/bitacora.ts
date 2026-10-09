@@ -1,25 +1,24 @@
-// Bitácora semanal: misiones por día, límites de carga suaves y micro-pasos.
-export const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] as const;
+import { lunesDe, sumarDias } from "./fechas";
 
+// Bitácora semanal: misiones con fecha exacta, límites de carga suaves y micro-pasos.
 export type Paso = { id: string; texto: string; hecha: boolean };
+
 export type Mision = {
   id: string;
   titulo: string;
-  dia: number; // 1 = lunes ... 7 = domingo
+  fecha: string; // AAAA-MM-DD: el día exacto en que aparece
   hecha: boolean;
   pasos: Paso[];
-  vence: string | null; // ISO 8601, opcional
+  vence: string | null; // ISO 8601 con hora, opcional
 };
 
 export type EstadoTiempo = "sin_hora" | "lejos" | "pronto" | "esperando";
-
-const DOS_HORAS_MS = 2 * 60 * 60 * 1000;
-
 export type Carga = "libre" | "suave" | "llena";
 
 export const MAX_PASOS = 6;
 const LIMITE_SUAVE = 3; // a partir de 3 pendientes el día se pone ámbar
 const LIMITE_LLENA = 5; // a partir de 5 pendientes se avisa con calidez
+const DOS_HORAS_MS = 2 * 60 * 60 * 1000;
 
 export function nivelCarga(pendientes: number): Carga {
   if (pendientes >= LIMITE_LLENA) return "llena";
@@ -45,7 +44,7 @@ export function dividirEnPasos(texto: string, generarId: () => string): Paso[] {
     .map((t) => ({ id: generarId(), texto: t.slice(0, 120), hecha: false }));
 }
 
-// Estado de la hora de vencimiento. Nunca usa lenguaje de atraso: si la hora pasó, la misión "espera su turno".
+// Estado de la hora de vencimiento. Nunca usa lenguaje de atraso.
 export function estadoTiempo(m: Pick<Mision, "hecha" | "vence">, ahora: Date = new Date()): EstadoTiempo {
   if (m.hecha || !m.vence) return "sin_hora";
   const diferencia = new Date(m.vence).getTime() - ahora.getTime();
@@ -66,6 +65,33 @@ export function progreso(misiones: Mision[]) {
   return { total, hechas, porcentaje: total === 0 ? 0 : Math.round((hechas / total) * 100) };
 }
 
-export function pendientesDelDia(misiones: Mision[], dia: number) {
-  return misiones.filter((m) => m.dia === dia && !m.hecha).length;
+export function pendientesDelDia(misiones: Mision[], fecha: string) {
+  return misiones.filter((m) => m.fecha === fecha && !m.hecha).length;
+}
+
+// Convierte datos guardados con el formato anterior (día 1-7 de la semana actual) al nuevo.
+// Así no se pierden las misiones que ya estaban guardadas en el navegador.
+export function migrarMisiones(datos: unknown, hoy: string): Mision[] {
+  if (!Array.isArray(datos)) return [];
+  const lunes = lunesDe(hoy);
+  const salida: Mision[] = [];
+  for (const d of datos as Record<string, unknown>[]) {
+    if (!d || typeof d.titulo !== "string" || typeof d.id !== "string") continue;
+    const fecha =
+      typeof d.fecha === "string"
+        ? d.fecha
+        : typeof d.dia === "number" && d.dia >= 1 && d.dia <= 7
+          ? sumarDias(lunes, d.dia - 1)
+          : null;
+    if (!fecha) continue;
+    salida.push({
+      id: d.id,
+      titulo: d.titulo,
+      fecha,
+      hecha: d.hecha === true,
+      pasos: Array.isArray(d.pasos) ? (d.pasos as Mision["pasos"]) : [],
+      vence: typeof d.vence === "string" ? d.vence : null,
+    });
+  }
+  return salida;
 }

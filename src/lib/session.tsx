@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import type { Mision } from "./bitacora";
+import { migrarMisiones, type Mision } from "./bitacora";
+import { aISO } from "./fechas";
 import type { ChatMensaje, Checkin, Emocion } from "./types";
 
 export type Evaluacion = {
@@ -56,7 +57,7 @@ export function SesionProvider({ children }: { children: ReactNode }) {
       if (window.localStorage.getItem("ucv-bitacora-guardar") !== "si") return;
       const bruto = window.localStorage.getItem("ucv-bitacora");
       setGuardarBitacora(true);
-      if (bruto) setMisiones(JSON.parse(bruto) as Mision[]);
+      if (bruto) setMisiones(migrarMisiones(JSON.parse(bruto), aISO(new Date())));
     } catch {
       // Sin acceso a localStorage, la bitácora funciona solo en memoria.
     }
