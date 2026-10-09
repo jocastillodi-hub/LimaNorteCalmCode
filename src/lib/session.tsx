@@ -25,6 +25,8 @@ type Sesion = {
   setNocturno: (v: boolean) => void;
   racha: number;
   registrarActividad: () => void;
+  bitacoraAbierta: boolean;
+  setBitacoraAbierta: (v: boolean) => void;
   misiones: Mision[];
   setMisiones: (m: Mision[] | ((prev: Mision[]) => Mision[])) => void;
   guardarBitacora: boolean;
@@ -47,6 +49,7 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   // Bitácora: en memoria por defecto. Solo se guarda en el navegador si el usuario lo activa.
   const [misiones, setMisiones] = useState<Mision[]>([]);
   const [guardarBitacora, setGuardarBitacora] = useState(false);
+  const [bitacoraAbierta, setBitacoraAbierta] = useState(false);
 
   useEffect(() => {
     try {
@@ -103,13 +106,15 @@ export function SesionProvider({ children }: { children: ReactNode }) {
       setNocturno,
       racha,
       registrarActividad,
+      bitacoraAbierta,
+      setBitacoraAbierta,
       misiones,
       setMisiones,
       guardarBitacora,
       setGuardarBitacora,
       reiniciar,
     }),
-    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, nocturno, racha, registrarActividad, misiones, guardarBitacora, reiniciar],
+    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, nocturno, racha, registrarActividad, misiones, guardarBitacora, bitacoraAbierta, reiniciar],
   );
 
   return <SesionContext.Provider value={valor}>{children}</SesionContext.Provider>;

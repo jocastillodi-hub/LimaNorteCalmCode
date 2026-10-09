@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dividirEnPasos, mensajeCarga, nivelCarga, pendientesDelDia, progreso } from "../bitacora";
+import { dividirEnPasos, estadoTiempo, misionesPorRecordar, mensajeCarga, nivelCarga, pendientesDelDia, progreso } from "../bitacora";
 
 const id = (() => {
   let n = 0;
@@ -32,9 +32,9 @@ describe("dividirEnPasos", () => {
 
 describe("progreso y pendientes", () => {
   const misiones = [
-    { id: "1", titulo: "a", dia: 1, hecha: true, pasos: [] },
-    { id: "2", titulo: "b", dia: 1, hecha: false, pasos: [] },
-    { id: "3", titulo: "c", dia: 2, hecha: false, pasos: [] },
+    { id: "1", titulo: "a", dia: 1, hecha: true, pasos: [], vence: null },
+    { id: "2", titulo: "b", dia: 1, hecha: false, pasos: [], vence: null },
+    { id: "3", titulo: "c", dia: 2, hecha: false, pasos: [], vence: null },
   ];
   it("calcula el porcentaje completado", () => {
     expect(progreso(misiones)).toEqual({ total: 3, hechas: 1, porcentaje: 33 });
@@ -43,5 +43,29 @@ describe("progreso y pendientes", () => {
   it("cuenta pendientes por día", () => {
     expect(pendientesDelDia(misiones, 1)).toBe(1);
     expect(pendientesDelDia(misiones, 2)).toBe(1);
+  });
+});
+
+describe("estadoTiempo", () => {
+  const ahora = new Date("2026-10-09T10:00:00");
+  it("distingue lejos, pronto, esperando y sin hora", () => {
+    expect(estadoTiempo({ hecha: false, vence: null }, ahora)).toBe("sin_hora");
+    expect(estadoTiempo({ hecha: false, vence: new Date("2026-10-09T18:00:00").toISOString() }, ahora)).toBe("lejos");
+    expect(estadoTiempo({ hecha: false, vence: new Date("2026-10-09T11:30:00").toISOString() }, ahora)).toBe("pronto");
+    expect(estadoTiempo({ hecha: false, vence: new Date("2026-10-09T09:00:00").toISOString() }, ahora)).toBe("esperando");
+  });
+
+  it("una misión hecha nunca está pendiente de hora", () => {
+    expect(estadoTiempo({ hecha: true, vence: new Date("2026-10-09T09:00:00").toISOString() }, ahora)).toBe("sin_hora");
+  });
+
+  it("solo recuerda las que vencen pronto y no están hechas", () => {
+    const base = { titulo: "x", dia: 1, pasos: [] };
+    const misiones = [
+      { ...base, id: "a", hecha: false, vence: new Date("2026-10-09T11:00:00").toISOString() },
+      { ...base, id: "b", hecha: true, vence: new Date("2026-10-09T11:00:00").toISOString() },
+      { ...base, id: "c", hecha: false, vence: new Date("2026-10-09T18:00:00").toISOString() },
+    ];
+    expect(misionesPorRecordar(misiones, ahora).map((m) => m.id)).toEqual(["a"]);
   });
 });

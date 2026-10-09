@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Bitacora from "@/components/Bitacora";
 import Racha from "@/components/Racha";
-import { useCallback, useState } from "react";
 import { useSesion } from "@/lib/session";
 
 // Barra inferior fija con íconos grandes. Los nombres son cálidos a propósito.
@@ -20,10 +19,8 @@ const emocionesDificiles = ["tristeza", "agotamiento"];
 
 export default function Nav() {
   const pathname = usePathname();
-  const { nocturno, setNocturno, checkin } = useSesion();
+  const { nocturno, setNocturno, checkin, setBitacoraAbierta } = useSesion();
   const necesitaApoyo = checkin !== null && emocionesDificiles.includes(checkin.emocion);
-  const [bitacoraAbierta, setBitacoraAbierta] = useState(false);
-  const cerrarBitacora = useCallback(() => setBitacoraAbierta(false), []);
 
   return (
     <>
@@ -44,7 +41,7 @@ export default function Nav() {
         </div>
       </header>
 
-      <Bitacora abierta={bitacoraAbierta} onCerrar={cerrarBitacora} />
+      <Bitacora />
 
       <nav aria-label="Principal" className="panel-nav fixed inset-x-0 bottom-0 z-40 border-t-4 border-slate-200 bg-white/95 backdrop-blur">
         <ul className="mx-auto flex max-w-xl justify-around px-2 pb-2 pt-2">

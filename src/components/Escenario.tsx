@@ -7,6 +7,7 @@ import Caracol from "@/components/Caracol";
 import FondoFluido from "@/components/FondoFluido";
 import FondoNoche from "@/components/FondoNoche";
 import OndaClic from "@/components/OndaClic";
+import RecordatorioBurbuja from "@/components/RecordatorioBurbuja";
 import Vida from "@/components/Vida";
 import { useSesion } from "@/lib/session";
 
@@ -26,6 +27,7 @@ export default function Escenario({ children }: { children: ReactNode }) {
       <OndaClic />
       <Caracol />
       <div className="relative z-0">{children}</div>
+      <RecordatorioBurbuja />
       <BotonSOS />
     </div>
   );
