@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Bitacora from "@/components/Bitacora";
 import Racha from "@/components/Racha";
+import { useCallback, useState } from "react";
 import { useSesion } from "@/lib/session";
 
 // Barra inferior fija con íconos grandes. Los nombres son cálidos a propósito.
@@ -20,6 +22,8 @@ export default function Nav() {
   const pathname = usePathname();
   const { nocturno, setNocturno, checkin } = useSesion();
   const necesitaApoyo = checkin !== null && emocionesDificiles.includes(checkin.emocion);
+  const [bitacoraAbierta, setBitacoraAbierta] = useState(false);
+  const cerrarBitacora = useCallback(() => setBitacoraAbierta(false), []);
 
   return (
     <>
@@ -40,8 +44,21 @@ export default function Nav() {
         </div>
       </header>
 
+      <Bitacora abierta={bitacoraAbierta} onCerrar={cerrarBitacora} />
+
       <nav aria-label="Principal" className="panel-nav fixed inset-x-0 bottom-0 z-40 border-t-4 border-slate-200 bg-white/95 backdrop-blur">
         <ul className="mx-auto flex max-w-xl justify-around px-2 pb-2 pt-2">
+          <li>
+            <button
+              type="button"
+              onClick={() => setBitacoraAbierta(true)}
+              aria-haspopup="dialog"
+              className="flex min-w-[4.5rem] flex-col items-center gap-0.5 rounded-2xl px-2 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-slate-100 active:translate-y-0.5"
+            >
+              <span className="text-3xl" aria-hidden="true">📜</span>
+              Bitácora
+            </button>
+          </li>
           {enlaces.map((e) => {
             const activo = pathname === e.href;
             const resaltar = e.href === "/apoyo" && necesitaApoyo && !activo;

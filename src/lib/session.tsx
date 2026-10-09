@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import type { Mision } from "./bitacora";
 import type { ChatMensaje, Checkin, Emocion } from "./types";
 
 export type Evaluacion = {
@@ -24,6 +25,10 @@ type Sesion = {
   setNocturno: (v: boolean) => void;
   racha: number;
   registrarActividad: () => void;
+  misiones: Mision[];
+  setMisiones: (m: Mision[] | ((prev: Mision[]) => Mision[])) => void;
+  guardarBitacora: boolean;
+  setGuardarBitacora: (v: boolean) => void;
   reiniciar: () => void;
 };
 
@@ -39,6 +44,34 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   // Racha: actividades completadas en esta sesión (no se guarda entre visitas).
   const [racha, setRacha] = useState(0);
   const registrarActividad = useCallback(() => setRacha((n) => n + 1), []);
+  // Bitácora: en memoria por defecto. Solo se guarda en el navegador si el usuario lo activa.
+  const [misiones, setMisiones] = useState<Mision[]>([]);
+  const [guardarBitacora, setGuardarBitacora] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem("ucv-bitacora-guardar") !== "si") return;
+      const bruto = window.localStorage.getItem("ucv-bitacora");
+      setGuardarBitacora(true);
+      if (bruto) setMisiones(JSON.parse(bruto) as Mision[]);
+    } catch {
+      // Sin acceso a localStorage, la bitácora funciona solo en memoria.
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (guardarBitacora) {
+        window.localStorage.setItem("ucv-bitacora-guardar", "si");
+        window.localStorage.setItem("ucv-bitacora", JSON.stringify(misiones));
+      } else {
+        window.localStorage.removeItem("ucv-bitacora-guardar");
+        window.localStorage.removeItem("ucv-bitacora");
+      }
+    } catch {
+      // Sin acceso a localStorage no hay nada que guardar.
+    }
+  }, [misiones, guardarBitacora]);
 
   const reiniciar = useCallback(() => {
     setCheckinState(null);
@@ -47,6 +80,7 @@ export function SesionProvider({ children }: { children: ReactNode }) {
     setEvaluacion(null);
     setChat([]);
     setRacha(0);
+    setMisiones([]);
   }, []);
 
   const setCheckin = useCallback((c: Checkin) => {
@@ -69,9 +103,13 @@ export function SesionProvider({ children }: { children: ReactNode }) {
       setNocturno,
       racha,
       registrarActividad,
+      misiones,
+      setMisiones,
+      guardarBitacora,
+      setGuardarBitacora,
       reiniciar,
     }),
-    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, nocturno, racha, registrarActividad, reiniciar],
+    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, nocturno, racha, registrarActividad, misiones, guardarBitacora, reiniciar],
   );
 
   return <SesionContext.Provider value={valor}>{children}</SesionContext.Provider>;
