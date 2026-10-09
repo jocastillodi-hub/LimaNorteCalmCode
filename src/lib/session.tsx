@@ -1,8 +1,6 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import type { Tarea } from "./prioridades";
-import { tareasDemo } from "./prioridades";
 import type { ChatMensaje, Checkin, Emocion } from "./types";
 
 export type Evaluacion = {
@@ -16,8 +14,6 @@ type Sesion = {
   checkin: Checkin | null;
   setCheckin: (c: Checkin) => void;
   tensionAntes: number | null;
-  tareas: Tarea[];
-  setTareas: (t: Tarea[] | ((prev: Tarea[]) => Tarea[])) => void;
   emocionNota: { emocion: Emocion | null; nota: string };
   setEmocionNota: (e: { emocion: Emocion | null; nota: string }) => void;
   evaluacion: Evaluacion | null;
@@ -32,7 +28,6 @@ const SesionContext = createContext<Sesion | null>(null);
 export function SesionProvider({ children }: { children: ReactNode }) {
   const [checkin, setCheckinState] = useState<Checkin | null>(null);
   const [tensionAntes, setTensionAntes] = useState<number | null>(null);
-  const [tareas, setTareas] = useState<Tarea[]>(tareasDemo);
   const [emocionNota, setEmocionNota] = useState<{ emocion: Emocion | null; nota: string }>({ emocion: null, nota: "" });
   const [evaluacion, setEvaluacion] = useState<Evaluacion | null>(null);
   const [chat, setChat] = useState<ChatMensaje[]>([]);
@@ -40,7 +35,6 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   const reiniciar = useCallback(() => {
     setCheckinState(null);
     setTensionAntes(null);
-    setTareas(tareasDemo);
     setEmocionNota({ emocion: null, nota: "" });
     setEvaluacion(null);
     setChat([]);
@@ -56,8 +50,6 @@ export function SesionProvider({ children }: { children: ReactNode }) {
       checkin,
       setCheckin,
       tensionAntes,
-      tareas,
-      setTareas,
       emocionNota,
       setEmocionNota,
       evaluacion,
@@ -66,7 +58,7 @@ export function SesionProvider({ children }: { children: ReactNode }) {
       setChat,
       reiniciar,
     }),
-    [checkin, setCheckin, tensionAntes, tareas, emocionNota, evaluacion, chat, reiniciar],
+    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, reiniciar],
   );
 
   return <SesionContext.Provider value={valor}>{children}</SesionContext.Provider>;

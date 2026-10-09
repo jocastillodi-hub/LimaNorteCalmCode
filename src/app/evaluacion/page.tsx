@@ -96,7 +96,6 @@ export default function Evaluacion() {
 
       <div className="flex flex-wrap gap-3">
         <Link href="/pausa" className="rounded-xl border border-teal-300 bg-white px-4 py-2 font-medium text-teal-800 hover:bg-teal-50">🫁 Otra pausa</Link>
-        <Link href="/prioridades" className="rounded-xl border border-teal-300 bg-white px-4 py-2 font-medium text-teal-800 hover:bg-teal-50">Revisar prioridades</Link>
         <Link href="/" onClick={reiniciar} className="rounded-xl bg-slate-700 px-4 py-2 font-medium text-white hover:bg-slate-800">
           Finalizar sesión y volver al inicio
         </Link>

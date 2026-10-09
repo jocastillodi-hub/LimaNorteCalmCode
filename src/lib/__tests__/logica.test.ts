@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { diferenciaTension, evaluarCheckin } from "../evaluacion";
 import { haySenalDeRiesgo } from "../seguridad";
-import { accionInicial, recomendacion } from "../prioridades";
 import type { Checkin } from "../types";
 
 const base: Checkin = {
@@ -46,15 +45,5 @@ describe("haySenalDeRiesgo", () => {
   it("no marca frases cotidianas", () => {
     expect(haySenalDeRiesgo("Tengo que cortarme el pelo mañana")).toBe(false);
     expect(haySenalDeRiesgo("Estoy cansado por la tesis")).toBe(false);
-  });
-});
-
-describe("prioridades", () => {
-  it("recomienda pausa con tensión alta", () => {
-    expect(recomendacion(5, 120)).toMatch(/pausa/);
-  });
-
-  it("ofrece una acción distinta por área", () => {
-    expect(accionInicial("tesis", 2)).not.toBe(accionInicial("practicas", 2));
   });
 });

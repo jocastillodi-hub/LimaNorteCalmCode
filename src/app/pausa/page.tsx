@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Boton from "@/components/Boton";
+import MascotaInflable from "@/components/MascotaInflable";
 import Tarjeta from "@/components/Tarjeta";
 
 const DURACION = 180;
 const FASE_MS = 4000; // inhalar y exhalar suave, sin retener el aire
+const ESCALA_MAXIMA = 1.6; // la mascota crece hasta 1.6 veces su tamaño
+const DURACION_POP_MS = 1800;
 
 const alternativas = [
   "Observa cinco cosas que ves a tu alrededor.",
@@ -26,6 +29,7 @@ export default function Pausa() {
   const [restante, setRestante] = useState(DURACION);
   const [estado, setEstado] = useState<Estado>("lista");
   const [detenida, setDetenida] = useState(false);
+  const [explotando, setExplotando] = useState(false);
   const [audio, setAudio] = useState(false);
   const [fase, setFase] = useState<"inhala" | "exhala">("inhala");
   const [paso1, setPaso1] = useState(false);
@@ -37,19 +41,29 @@ export default function Pausa() {
     setVozDisponible("speechSynthesis" in window);
   }, []);
 
-  // Cuenta regresiva: solo cambia el tiempo; el cierre se decide abajo.
+  // Cuenta regresiva.
   useEffect(() => {
     if (estado !== "activa") return;
     const id = setInterval(() => setRestante((r) => Math.max(0, r - 1)), 1000);
     return () => clearInterval(id);
   }, [estado]);
 
-  // Al llegar a cero, la pausa termina por completo.
+  // Al llegar a cero: termina la pausa y dispara la explosión.
   useEffect(() => {
-    if (estado === "activa" && restante === 0) setEstado("terminada");
+    if (estado === "activa" && restante === 0) {
+      setEstado("terminada");
+      setExplotando(true);
+    }
   }, [estado, restante]);
 
-  // Alternancia de inhalar / exhalar.
+  // La explosión dura un momento y luego la mascota vuelve a su tamaño inicial.
+  useEffect(() => {
+    if (!explotando) return;
+    const id = setTimeout(() => setExplotando(false), DURACION_POP_MS);
+    return () => clearTimeout(id);
+  }, [explotando]);
+
+  // Alternancia de inhalar / exhalar (texto y guía de voz).
   useEffect(() => {
     if (estado !== "activa") return;
     const id = setInterval(() => setFase((f) => (f === "inhala" ? "exhala" : "inhala")), FASE_MS);
@@ -66,7 +80,7 @@ export default function Pausa() {
     window.speechSynthesis.speak(new SpeechSynthesisUtterance(texto));
   }, [fase, audio, estado, vozDisponible]);
 
-  // Silencia la voz al salir de la página o al pausar.
+  // Silencia la voz al pausar, detener o salir.
   useEffect(() => {
     if ((estado !== "activa" || !audio) && vozDisponible) window.speechSynthesis.cancel();
   }, [estado, audio, vozDisponible]);
@@ -80,6 +94,7 @@ export default function Pausa() {
   function iniciar() {
     setRestante(DURACION);
     setDetenida(false);
+    setExplotando(false);
     setPaso1(false);
     setPaso2("");
     ultimaFase.current = "";
@@ -92,7 +107,9 @@ export default function Pausa() {
     setEstado("terminada");
   }
 
-  const progreso = ((DURACION - restante) / DURACION) * 100;
+  const transcurrido = (DURACION - restante) / DURACION;
+  // Crece solo mientras la pausa está en curso; al terminar vuelve a 1.
+  const escala = estado === "activa" || estado === "pausada" ? 1 + (ESCALA_MAXIMA - 1) * transcurrido : 1;
   const completo = estado === "terminada" && !detenida;
 
   return (
@@ -103,21 +120,16 @@ export default function Pausa() {
       </div>
 
       <Tarjeta>
-        <div className="flex flex-col items-center gap-6">
-          <div className="relative flex h-56 w-56 items-center justify-center">
-            <div
-              aria-hidden="true"
-              className={`absolute h-full w-full rounded-full bg-teal-200 transition-transform ease-in-out ${
-                estado === "activa" && fase === "inhala" ? "scale-100" : "scale-50"
-              }`}
-              style={{ transitionDuration: `${FASE_MS}ms` }}
-            />
-            <div className="relative text-center">
-              <p className="text-4xl font-semibold tabular-nums text-teal-900" aria-live="polite">{formatear(restante)}</p>
-              <p className="text-sm text-teal-800">
-                {estado === "activa" ? (fase === "inhala" ? "Inhala suave" : "Exhala despacio") : "Listo cuando quieras"}
-              </p>
-            </div>
+        <div className="flex flex-col items-center gap-5">
+          <MascotaInflable escala={escala} visible={!explotando} explotando={explotando} />
+
+          <div className="text-center">
+            <p className="text-5xl font-bold tabular-nums text-teal-900" aria-live="polite">{formatear(restante)}</p>
+            <p className="mt-1 text-sm text-teal-800">
+              {estado === "activa"
+                ? fase === "inhala" ? "Inhala suave… 🫧" : "Exhala despacio… 🌊"
+                : completo ? "¡Lo lograste! 🎉" : "Listo cuando quieras"}
+            </p>
           </div>
 
           <div
@@ -128,7 +140,7 @@ export default function Pausa() {
             aria-label="Progreso de la pausa"
             className="h-3 w-full overflow-hidden rounded-full bg-teal-100"
           >
-            <div className="h-full bg-teal-600 transition-all" style={{ width: `${progreso}%` }} />
+            <div className="h-full bg-teal-600 transition-all" style={{ width: `${transcurrido * 100}%` }} />
           </div>
 
           <div className="flex flex-wrap justify-center gap-3">

@@ -9,7 +9,6 @@ const enlaces = [
   { href: "/", texto: "💛 Cómo estoy" },
   { href: "/pausa", texto: "🫁 Pausa" },
   { href: "/asistente", texto: "💬 Asistente" },
-  { href: "/prioridades", texto: "🗂️ Prioridades" },
   { href: "/autocuidado", texto: "🌷 Autocuidado" },
   { href: "/apoyo", texto: "🤍 Apoyo" },
 ];
