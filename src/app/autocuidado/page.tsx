@@ -1,14 +1,14 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import Tarjeta from "@/components/Tarjeta";
 import { emociones } from "@/lib/opciones";
 import { useSesion } from "@/lib/session";
 
 const ejercicios = [
-  { titulo: "Respiración consciente", texto: "Sigue la mascota: inhala al inflarse y suelta el aire al desinflarse.", enlace: "/pausa", enlaceTexto: "Abrir el Oasis 🫧" },
-  { titulo: "Tareas en pasos pequeños", texto: "Divide la tarea más pesada en un paso que tome menos de 10 minutos. Empieza solo por ese.", enlace: undefined, enlaceTexto: "" },
-  { titulo: "Pausas y descanso", texto: "Trabaja en bloques cortos, levántate entre ellos y define una hora para dejar de estudiar. El descanso también es parte del trabajo.", enlace: undefined, enlaceTexto: "" },
+  { titulo: "Respiración consciente", texto: "Respira por la nariz con calma y exhala más lento que inhalas. Repite 3 veces, sin forzar el aire." },
+  { titulo: "Tareas en pasos pequeños", texto: "Divide la tarea más pesada en un paso que tome menos de 10 minutos. Empieza solo por ese." },
+  { titulo: "Pausas y descanso", texto: "Trabaja en bloques cortos, levántate entre ellos y define una hora para dejar de estudiar. El descanso también es parte del trabajo." },
 ];
 
 const reflexiones = [
@@ -19,11 +19,12 @@ const reflexiones = [
 
 export default function Autocuidado() {
   const { emocionNota, setEmocionNota } = useSesion();
+  const [abierto, setAbierto] = useState<number | null>(0);
 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold text-teal-800">🌷 Mimos para Mí</h1>
+        <h1 className="text-3xl font-bold text-teal-800">🌷 Autocuidado y emociones</h1>
         <p className="mt-2 text-slate-600">Ninguna actividad es obligatoria. Elige lo que te sirva hoy.</p>
       </div>
 
@@ -55,22 +56,24 @@ export default function Autocuidado() {
         )}
       </Tarjeta>
 
-      <section aria-labelledby="ejercicios" className="flex flex-col gap-3">
-        <h2 id="ejercicios" className="text-lg font-semibold text-teal-800">🧘 Ejercicios breves</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {ejercicios.map((e) => (
-            <article key={e.titulo} className="panel rounded-2xl bg-white/85 p-5 shadow-sm">
-              <h3 className="font-semibold text-teal-900">{e.titulo}</h3>
-              <p className="mt-2 text-slate-700">{e.texto}</p>
-              {e.enlace && (
-                <Link href={e.enlace} className="mt-3 inline-block rounded-full bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">
-                  {e.enlaceTexto}
-                </Link>
-              )}
-            </article>
+      <Tarjeta titulo="🧘 Ejercicios breves">
+        <ul className="flex flex-col gap-2">
+          {ejercicios.map((e, i) => (
+            <li key={e.titulo} className="rounded-xl border border-teal-100">
+              <button
+                type="button"
+                aria-expanded={abierto === i}
+                onClick={() => setAbierto(abierto === i ? null : i)}
+                className="flex w-full items-center justify-between px-4 py-3 text-left font-medium text-teal-900"
+              >
+                {e.titulo}
+                <span aria-hidden="true">{abierto === i ? "−" : "+"}</span>
+              </button>
+              {abierto === i && <p className="px-4 pb-4 text-slate-700">{e.texto}</p>}
+            </li>
           ))}
-        </div>
-      </section>
+        </ul>
+      </Tarjeta>
 
       <Tarjeta titulo="🪞 Preguntas para reflexionar">
         <ul className="list-disc space-y-2 pl-5 text-slate-700">

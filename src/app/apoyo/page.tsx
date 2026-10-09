@@ -7,7 +7,7 @@ export default function Apoyo() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold text-teal-800">🛟 Salvavidas</h1>
+        <h1 className="text-3xl font-bold text-teal-800">Apoyo psicológico</h1>
         <p className="mt-2 text-slate-600">Pedir ayuda profesional es un gesto de cuidado, no de debilidad.</p>
       </div>
 

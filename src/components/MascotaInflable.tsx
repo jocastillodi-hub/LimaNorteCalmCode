@@ -11,9 +11,12 @@ const COLORES_CONFETI = ["#fde047", "#f472b6", "#67e8f9", "#a78bfa", "#86efac", 
 function FiguraOriginal() {
   return (
     <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden="true">
+      {/* Cuerpo */}
       <ellipse cx="100" cy="112" rx="72" ry="66" fill="#fde047" stroke="#ca8a04" strokeWidth="4" />
+      {/* Flotador */}
       <ellipse cx="100" cy="128" rx="88" ry="30" fill="none" stroke="#f97316" strokeWidth="16" />
       <ellipse cx="100" cy="128" rx="88" ry="30" fill="none" stroke="#fff7ed" strokeWidth="4" strokeDasharray="10 10" />
+      {/* Cara */}
       <circle cx="78" cy="98" r="9" fill="#1e293b" />
       <circle cx="122" cy="98" r="9" fill="#1e293b" />
       <circle cx="80" cy="95" r="3" fill="#fff" />
@@ -27,17 +30,16 @@ export default function MascotaInflable({
   escala,
   visible,
   explotando,
-  duracionMs = 1000,
 }: {
   escala: number;
   visible: boolean;
   explotando: boolean;
-  duracionMs?: number;
 }) {
   const [fallo, setFallo] = useState(false);
 
   return (
     <div className="relative flex h-64 w-64 items-center justify-center">
+      {/* Destello y partículas al explotar */}
       {explotando && (
         <>
           <div aria-hidden="true" className="destello pointer-events-none absolute inset-0 rounded-full bg-white" />
@@ -63,14 +65,10 @@ export default function MascotaInflable({
         </>
       )}
 
+      {/* La mascota se infla con transform: scale(...) según el progreso */}
       <div
-        className="inflable h-full w-full ease-in-out"
-        style={{
-          transform: `scale(${visible ? escala : 0.001})`,
-          opacity: visible ? 1 : 0,
-          transitionProperty: "transform, opacity",
-          transitionDuration: `${duracionMs}ms`,
-        }}
+        className="inflable h-full w-full transition-transform duration-1000 ease-out"
+        style={{ transform: `scale(${visible ? escala : 0.001})`, opacity: visible ? 1 : 0 }}
       >
         {fallo ? (
           <FiguraOriginal />
@@ -78,7 +76,7 @@ export default function MascotaInflable({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={MASCOTA_SRC}
-            alt="Mascota inflable que sigue el ritmo de la respiración"
+            alt="Mascota inflable que crece durante la pausa"
             className="h-full w-full object-contain"
             onError={() => setFallo(true)}
           />

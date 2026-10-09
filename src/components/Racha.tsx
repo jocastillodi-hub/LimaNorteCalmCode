@@ -3,17 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useSesion } from "@/lib/session";
 
-// Racha de la sesión: una hamburguesa dorada que brilla y hace "pop" al subir.
+// Racha de la sesión: una hamburguesa dorada que brilla y cuenta las actividades completadas.
 export default function Racha() {
   const { racha } = useSesion();
-  const [animando, setAnimando] = useState(false);
+  const [brillo, setBrillo] = useState(false);
   const previa = useRef(racha);
 
   useEffect(() => {
     if (racha > previa.current) {
+      setBrillo(true);
+      const id = setTimeout(() => setBrillo(false), 1200);
       previa.current = racha;
-      setAnimando(true);
-      const id = setTimeout(() => setAnimando(false), 1200);
       return () => clearTimeout(id);
     }
     previa.current = racha;
@@ -21,10 +21,10 @@ export default function Racha() {
 
   return (
     <div
-      className={`flex items-center gap-2 rounded-full bg-amber-300/90 px-3 py-1.5 text-sm font-bold text-amber-950 shadow ${animando ? "racha-pop" : ""}`}
+      className="flex items-center gap-2 rounded-full bg-amber-300/90 px-3 py-1.5 text-sm font-bold text-amber-950 shadow"
       title="Racha de actividades completadas en esta sesión"
     >
-      <span aria-hidden="true" className={`text-lg ${animando ? "racha-brilla" : ""}`}>🍔</span>
+      <span aria-hidden="true" className={`text-lg ${brillo ? "racha-brilla" : ""}`}>🍔</span>
       <span aria-live="polite">Racha: {racha}</span>
     </div>
   );
