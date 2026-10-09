@@ -11,7 +11,6 @@ const enlaces = [
   { href: "/pausa", icono: "🫧", texto: "Oasis" },
   { href: "/asistente", icono: "💬", texto: "Charla" },
   { href: "/autocuidado", icono: "🌷", texto: "Mimos" },
-  { href: "/tareas", icono: "📝", texto: "Tareas" },
   { href: "/apoyo", icono: "🛟", texto: "Salvavidas" },
 ];
 
