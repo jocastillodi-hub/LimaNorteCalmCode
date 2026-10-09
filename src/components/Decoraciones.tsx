@@ -2,23 +2,54 @@
 // Son decorativas (aria-hidden) y se ocultan en pantallas pequeñas para no estorbar.
 
 export function CasaPina({ className = "" }: { className?: string }) {
+  // Ilustración propia: casa-piña con chimenea de tubo, escotilla metálica,
+  // ventanas redondas y hojas arriba. Estilo amigable y de colores cálidos.
+  const remaches = [0, 45, 90, 135, 180, 225, 270, 315];
   return (
-    <svg aria-hidden="true" viewBox="0 0 160 220" className={`pointer-events-none ${className}`}>
+    <svg aria-hidden="true" viewBox="0 0 200 260" className={`pointer-events-none ${className}`}>
       {/* Hojas */}
-      <path d="M80 6 C60 -8 40 4 46 22 C56 16 66 14 80 22 C94 14 104 16 114 22 C120 4 100 -8 80 6 Z" fill="#2f9e6b" />
-      <path d="M80 10 L64 -4 M80 10 L96 -4 M80 10 L80 -10" stroke="#1f7a50" strokeWidth="3" />
+      <path d="M100 42 C78 24 62 10 46 14 C58 26 70 36 100 44 Z" fill="#22c55e" stroke="#15803d" strokeWidth="3" />
+      <path d="M100 42 C122 24 138 10 154 14 C142 26 130 36 100 44 Z" fill="#22c55e" stroke="#15803d" strokeWidth="3" />
+      <path d="M100 40 C88 18 88 2 100 -6 C112 2 112 18 100 40 Z" fill="#4ade80" stroke="#15803d" strokeWidth="3" />
+      <path d="M100 40 C72 40 58 52 60 66 C76 60 88 52 100 44 Z" fill="#4ade80" stroke="#15803d" strokeWidth="3" />
+      <path d="M100 40 C128 40 142 52 140 66 C124 60 112 52 100 44 Z" fill="#4ade80" stroke="#15803d" strokeWidth="3" />
+
+      {/* Chimenea de tubo */}
+      <rect x="138" y="34" width="20" height="62" rx="4" fill="#94a3b8" stroke="#475569" strokeWidth="3" />
+      <rect x="134" y="28" width="28" height="10" rx="3" fill="#cbd5e1" stroke="#475569" strokeWidth="3" />
+
       {/* Cuerpo de piña */}
-      <ellipse cx="80" cy="132" rx="70" ry="84" fill="#f5b83d" stroke="#c98a1b" strokeWidth="4" />
+      <ellipse cx="100" cy="150" rx="78" ry="98" fill="#fde047" stroke="#ca8a04" strokeWidth="4" />
       {/* Rejilla de piña */}
-      {[-40, -20, 0, 20, 40].map((x) => (
-        <path key={`d${x}`} d={`M${80 + x} 60 Q${80 + x * 1.3} 130 ${80 + x} 210`} stroke="#c98a1b" strokeWidth="3" fill="none" opacity="0.6" />
+      <g stroke="#ca8a04" strokeWidth="2.5" opacity="0.45" fill="none">
+        <path d="M40 90 L160 210" />
+        <path d="M30 130 L150 250" />
+        <path d="M60 60 L180 180" />
+        <path d="M160 70 L40 190" />
+        <path d="M170 110 L50 230" />
+        <path d="M120 40 L20 140" />
+      </g>
+
+      {/* Ventanas redondas */}
+      {[[68, 118], [132, 118]].map(([x, y]) => (
+        <g key={`${x}-${y}`}>
+          <circle cx={x} cy={y} r="22" fill="#bfdbfe" stroke="#f8fafc" strokeWidth="9" />
+          <circle cx={x} cy={y} r="22" fill="none" stroke="#0e7490" strokeWidth="3" />
+          <path d={`M${x - 12} ${y - 4} L${x + 8} ${y - 14}`} stroke="#fff" strokeWidth="3" strokeLinecap="round" opacity="0.8" />
+        </g>
       ))}
-      {[-30, 0, 30].map((y) => (
-        <path key={`h${y}`} d={`M20 ${132 + y} Q80 ${132 + y + 14} 140 ${132 + y}`} stroke="#c98a1b" strokeWidth="3" fill="none" opacity="0.6" />
+
+      {/* Escotilla de metal con remaches */}
+      <circle cx="100" cy="200" r="30" fill="#64748b" stroke="#334155" strokeWidth="6" />
+      <circle cx="100" cy="200" r="20" fill="#cbd5e1" stroke="#475569" strokeWidth="3" />
+      {remaches.map((a) => (
+        <circle key={a} cx={100 + Math.cos((a * Math.PI) / 180) * 26} cy={200 + Math.sin((a * Math.PI) / 180) * 26} r="2.6" fill="#e2e8f0" />
       ))}
-      {/* Ventana redonda y puerta */}
-      <circle cx="80" cy="96" r="18" fill="#7dd3fc" stroke="#0e7490" strokeWidth="4" />
-      <rect x="62" y="158" width="36" height="52" rx="18" fill="#8b5a2b" stroke="#5b3a1a" strokeWidth="3" />
+      <path d="M100 186 L100 214 M86 200 L114 200" stroke="#475569" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="100" cy="200" r="6" fill="#94a3b8" stroke="#334155" strokeWidth="2" />
+
+      {/* Base */}
+      <rect x="44" y="244" width="112" height="10" rx="5" fill="#a16207" opacity="0.6" />
     </svg>
   );
 }

@@ -16,7 +16,7 @@ const enlaces = [
 
 export default function Nav() {
   const pathname = usePathname();
-  const { reiniciar, nocturno, setNocturno } = useSesion();
+  const { nocturno, setNocturno } = useSesion();
 
   return (
     <header className="panel-nav relative z-10 border-b border-white/40 bg-sky-700/80 text-white backdrop-blur">
@@ -52,13 +52,6 @@ export default function Nav() {
           >
             {nocturno ? "☀️ Día" : "🌙 Noche"}
           </button>
-        <button
-          type="button"
-          onClick={reiniciar}
-          className="rounded-full border border-white/50 px-3 py-1.5 text-sm text-white hover:bg-white/20"
-        >
-          🧹 Borrar sesión
-        </button>
         </div>
       </div>
     </header>

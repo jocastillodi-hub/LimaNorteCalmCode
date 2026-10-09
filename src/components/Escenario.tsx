@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import Burbujas from "@/components/Burbujas";
+import BotonSOS from "@/components/BotonSOS";
 import Caracol from "@/components/Caracol";
 import FondoFluido from "@/components/FondoFluido";
 import FondoNoche from "@/components/FondoNoche";
@@ -24,6 +25,7 @@ export default function Escenario({ children }: { children: ReactNode }) {
       <OndaClic />
       <Caracol />
       <div className="relative z-0">{children}</div>
+      <BotonSOS />
     </div>
   );
 }
