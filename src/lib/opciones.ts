@@ -1,14 +1,5 @@
 // Fuente única de las opciones del check-in y del autocuidado. Cada opción: [valor, texto, emoji].
-import type { Contexto, Dificultad, Emocion } from "./types";
-
-export const contextos: [Contexto, string, string][] = [
-  ["transporte", "Transporte público", "🚌"],
-  ["casa", "En casa", "🏡"],
-  ["universidad", "En la universidad", "🎓"],
-  ["practicas", "Prácticas preprofesionales", "💼"],
-  ["tesis", "Estudiando para la tesis", "📚"],
-  ["otro", "Otro lugar", "🌍"],
-];
+import type { Clima, Contexto, Dificultad, Emocion } from "./types";
 
 export const emociones: [Emocion, string, string][] = [
   ["tranquilidad", "Tranquilidad", "😌"],
@@ -17,7 +8,22 @@ export const emociones: [Emocion, string, string][] = [
   ["frustracion", "Frustración", "😤"],
   ["preocupacion", "Preocupación", "😟"],
   ["agotamiento", "Agotamiento", "🥱"],
-  ["otra", "Otra", "🌀"],
+];
+
+export const climas: [Clima, string, string][] = [
+  ["soleado", "Soleado", "☀️"],
+  ["nublado", "Nublado", "☁️"],
+  ["lluvia", "Lluvioso", "🌧️"],
+  ["tormenta", "Tormenta por dentro", "⛈️"],
+  ["arcoiris", "Arcoíris tras la lluvia", "🌈"],
+];
+
+export const contextos: [Contexto, string, string][] = [
+  ["transporte", "En transporte", "🚌"],
+  ["casa", "En casa", "🏡"],
+  ["universidad", "En la universidad", "🎓"],
+  ["practicas", "Prácticas", "💼"],
+  ["tesis", "Estudiando la tesis", "📚"],
 ];
 
 export const dificultades: [Dificultad, string, string][] = [
@@ -26,5 +32,4 @@ export const dificultades: [Dificultad, string, string][] = [
   ["presion_academica", "Presión académica", "🎯"],
   ["problemas_personales", "Problemas personales", "💭"],
   ["cansancio", "Cansancio", "😴"],
-  ["otra", "Otra", "🌀"],
 ];

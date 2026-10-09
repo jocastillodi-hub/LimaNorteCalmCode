@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import Tarjeta from "@/components/Tarjeta";
 import { accionInicial, recomendacion } from "@/lib/prioridades";
@@ -54,7 +55,7 @@ export default function Prioridades() {
         <p className="font-medium">{recomendacion(tension, minutos)}</p>
         {!checkin && (
           <p className="mt-2 text-sm">
-            Aún no hiciste el <a href="/check-in" className="underline">check-in</a>; usamos una tensión media como referencia.
+            Aún no hiciste el <Link href="/" className="underline">check-in</Link>; usamos una tensión media como referencia.
           </p>
         )}
       </div>

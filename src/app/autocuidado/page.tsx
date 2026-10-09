@@ -7,10 +7,8 @@ import { useSesion } from "@/lib/session";
 
 const ejercicios = [
   { titulo: "Respiración consciente", texto: "Respira por la nariz con calma y exhala más lento que inhalas. Repite 3 veces, sin forzar el aire." },
-  { titulo: "Conexión con el presente", texto: "Nombra mentalmente 3 cosas que ves, 2 que oyes y 1 que sientes en el cuerpo." },
   { titulo: "Tareas en pasos pequeños", texto: "Divide la tarea más pesada en un paso que tome menos de 10 minutos. Empieza solo por ese." },
-  { titulo: "Pausas académicas", texto: "Trabaja en bloques cortos y levántate, camina o toma agua entre ellos." },
-  { titulo: "Descanso", texto: "Define una hora para dejar de estudiar. El descanso también es parte del trabajo." },
+  { titulo: "Pausas y descanso", texto: "Trabaja en bloques cortos, levántate entre ellos y define una hora para dejar de estudiar. El descanso también es parte del trabajo." },
 ];
 
 const reflexiones = [

@@ -7,7 +7,7 @@ import Tarjeta from "@/components/Tarjeta";
 import { diferenciaTension } from "@/lib/evaluacion";
 import { useSesion } from "@/lib/session";
 
-const sentimientos = ["😌 Más tranquilo/a", "😐 Igual", "🥱 Más cansado/a", "😟 Más preocupado/a", "✨ Con más claridad", "🌀 Otro"];
+const sentimientos = ["😌 Más tranquilo/a", "😐 Igual", "🥱 Más cansado/a", "😟 Más preocupado/a", "✨ Con más claridad"];
 
 export default function Evaluacion() {
   const { tensionAntes, evaluacion, setEvaluacion, reiniciar } = useSesion();

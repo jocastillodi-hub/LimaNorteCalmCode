@@ -3,8 +3,7 @@ export type Contexto =
   | "casa"
   | "universidad"
   | "practicas"
-  | "tesis"
-  | "otro";
+  | "tesis";
 
 export type Emocion =
   | "tranquilidad"
@@ -12,16 +11,16 @@ export type Emocion =
   | "tristeza"
   | "frustracion"
   | "preocupacion"
-  | "agotamiento"
-  | "otra";
+  | "agotamiento";
 
 export type Dificultad =
   | "exceso_tareas"
   | "falta_tiempo"
   | "presion_academica"
   | "problemas_personales"
-  | "cansancio"
-  | "otra";
+  | "cansancio";
+
+export type Clima = "soleado" | "nublado" | "lluvia" | "tormenta" | "arcoiris";
 
 export type Checkin = {
   contexto: Contexto;
@@ -30,6 +29,7 @@ export type Checkin = {
   energia: number; // 1-5
   concentracion: number; // 1-5
   dificultad: Dificultad;
+  clima?: Clima; // opcional: metáfora libre del día
 };
 
 export type ChatMensaje = {

@@ -13,8 +13,6 @@ export type Evaluacion = {
 
 // Estado SOLO en memoria: se pierde al recargar la página. No usa localStorage ni cookies.
 type Sesion = {
-  nombre: string;
-  setNombre: (n: string) => void;
   checkin: Checkin | null;
   setCheckin: (c: Checkin) => void;
   tensionAntes: number | null;
@@ -32,7 +30,6 @@ type Sesion = {
 const SesionContext = createContext<Sesion | null>(null);
 
 export function SesionProvider({ children }: { children: ReactNode }) {
-  const [nombre, setNombre] = useState("");
   const [checkin, setCheckinState] = useState<Checkin | null>(null);
   const [tensionAntes, setTensionAntes] = useState<number | null>(null);
   const [tareas, setTareas] = useState<Tarea[]>(tareasDemo);
@@ -41,7 +38,6 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   const [chat, setChat] = useState<ChatMensaje[]>([]);
 
   const reiniciar = useCallback(() => {
-    setNombre("");
     setCheckinState(null);
     setTensionAntes(null);
     setTareas(tareasDemo);
@@ -57,8 +53,6 @@ export function SesionProvider({ children }: { children: ReactNode }) {
 
   const valor = useMemo(
     () => ({
-      nombre,
-      setNombre,
       checkin,
       setCheckin,
       tensionAntes,
@@ -72,7 +66,7 @@ export function SesionProvider({ children }: { children: ReactNode }) {
       setChat,
       reiniciar,
     }),
-    [nombre, checkin, setCheckin, tensionAntes, tareas, emocionNota, evaluacion, chat, reiniciar],
+    [checkin, setCheckin, tensionAntes, tareas, emocionNota, evaluacion, chat, reiniciar],
   );
 
   return <SesionContext.Provider value={valor}>{children}</SesionContext.Provider>;
