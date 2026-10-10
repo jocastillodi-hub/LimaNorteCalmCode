@@ -187,7 +187,6 @@ export default function CheckInFlow() {
 
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/pausa" className="rounded-xl bg-teal-600 px-5 py-3 font-medium text-white shadow hover:bg-teal-700">🫁 Hacer una pausa</Link>
-          <Link href="/asistente" className="rounded-xl bg-white px-5 py-3 font-medium text-teal-800 shadow-sm hover:bg-teal-50">💬 Hablar con el asistente</Link>
           <button type="button" onClick={reiniciar} className="rounded-xl px-5 py-3 font-medium text-slate-600 underline">Repetir el check-in</button>
         </div>
       </div>
