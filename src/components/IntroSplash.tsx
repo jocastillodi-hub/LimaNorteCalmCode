@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Fredoka } from "next/font/google";
 import { iniciarMusica } from "@/lib/musica";
+
+const titulo = Fredoka({ subsets: ["latin"], weight: ["700"] });
 
 // Tiempos de la secuencia: estallido (globals.css `.burbuja-estalla`) y desvanecido del fondo.
 const MS_ESTALLAR = 200;
@@ -42,18 +45,25 @@ export default function IntroSplash() {
         estado === "desvaneciendo" ? "opacity-0" : "opacity-100"
       }`}
     >
-      <button
-        type="button"
-        onClick={entrar}
-        disabled={iniciado}
-        className={`flex flex-col items-center gap-4 rounded-[3rem] p-4 ${iniciado ? "pulpo-estalla" : "pulpo-levita"}`}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/pulpita.png" alt="" aria-hidden="true" className="h-72 w-auto object-contain drop-shadow-xl sm:h-80" />
-        <span className="rounded-full bg-white/70 px-5 py-2 text-lg font-extrabold text-sky-950 shadow-md sm:text-xl">
-          Tocar para entrar
-        </span>
-      </button>
+      <div className="flex flex-col items-center gap-6">
+        <h1
+          className={`${titulo.className} bg-gradient-to-r from-sky-900 via-blue-600 to-teal-500 bg-clip-text px-4 text-center text-5xl leading-tight text-transparent drop-shadow-[0_3px_0_rgba(255,255,255,0.9)] sm:text-6xl`}
+        >
+          Nexum: Tu mejor opción
+        </h1>
+        <button
+          type="button"
+          onClick={entrar}
+          disabled={iniciado}
+          className={`flex flex-col items-center gap-4 rounded-[3rem] p-4 ${iniciado ? "pulpo-estalla" : "pulpo-levita"}`}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/pulpita.png" alt="" aria-hidden="true" className="h-72 w-auto object-contain drop-shadow-xl sm:h-80" />
+          <span className="rounded-full bg-white/70 px-5 py-2 text-lg font-extrabold text-sky-950 shadow-md sm:text-xl">
+            Tocar para entrar
+          </span>
+        </button>
+      </div>
     </div>
   );
 }
