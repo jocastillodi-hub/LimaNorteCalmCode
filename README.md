@@ -80,4 +80,6 @@ npm run test        # Vitest: lógica de check-in, prioridades y detección de r
 
 ## Música de fondo
 
-La pantalla de entrada reproduce `public/audio/bg-calma.mp3` al primer toque (los navegadores bloquean el audio sin un gesto del usuario). El archivo no está en el repositorio: añádelo tú con licencia libre. Si falta, la app funciona en silencio.
+La pantalla de entrada reproduce `public/bg-calma.mp3` en bucle al primer toque (los navegadores bloquean el audio sin un gesto del usuario). El botón 🔊/🔇 del encabezado y la tecla **M** silencian o activan la música (sin silenciar mientras escribes en el chat). Las teclas multimedia play/pause del teclado hacen lo mismo. Si el archivo falta, la app funciona en silencio.
+
+La mascota de la respiración usa `public/mascota.png`.

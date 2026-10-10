@@ -6,11 +6,11 @@ import MascotaInflable from "@/components/MascotaInflable";
 import { useSesion } from "@/lib/session";
 
 // Respiración guiada sincronizada con la mascota:
-// inhala 4 s (se infla a 1.5) · exhala 8 s (vuelve a 1), soltando burbujas.
+// inhala 4 s (se infla a 1.4) · exhala 8 s (vuelve a 1), soltando burbujas.
 // La retención es opcional y viene desactivada (la guía original pide evitar retenciones forzadas).
 
 const DURACION_TOTAL = 180;
-const ESCALA_INFLADA = 1.5;
+const ESCALA_INFLADA = 1.4;
 
 type Fase = { nombre: "inhala" | "retiene" | "exhala"; segundos: number; escala: number; texto: string };
 

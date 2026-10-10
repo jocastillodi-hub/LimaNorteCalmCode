@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 
-// Mascota que se infla con la respiración. Pon tu propia imagen (con licencia) en
-// public/mascota-flotador.png. Si no existe, se muestra una burbuja neutra.
-export const MASCOTA_SRC = "/mascota-flotador.png";
+// Mascota que se infla con la respiración. Imagen en
+// public/mascota.png. Si no existe, se muestra una burbuja neutra.
+export const MASCOTA_SRC = "/mascota.png";
 
 const COLORES_CONFETI = ["#fde047", "#f472b6", "#67e8f9", "#a78bfa", "#86efac", "#fb923c"];
 

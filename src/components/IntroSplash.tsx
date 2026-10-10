@@ -1,28 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { iniciarMusica } from "@/lib/musica";
 
-// Música de fondo. El archivo debe estar en public/audio/bg-calma.mp3.
-const RUTA_MUSICA = "/audio/bg-calma.mp3";
 // Tiempos de la secuencia en globals.css (`.concha-abierta`, `.perla`).
 const MS_ABRIR = 800;
 const MS_DESVANECER = 300;
-
-// Única instancia de audio: sobrevive al desmontaje del splash.
-let musica: HTMLAudioElement | null = null;
-
-// Debe llamarse dentro del gesto del usuario (onClick) para que el navegador permita reproducir.
-function iniciarMusica() {
-  try {
-    musica ??= new Audio(RUTA_MUSICA);
-    musica.loop = true;
-    musica.volume = 0.35;
-    // Si el archivo no existe o el navegador lo bloquea, la app sigue funcionando en silencio.
-    void musica.play().catch(() => {});
-  } catch {
-    // Sin soporte de audio no hay nada que reproducir.
-  }
-}
 
 // Concha de mar con perla. Las valvas se abren al tocarla y la perla sube a la superficie.
 function ConchaConPerla() {

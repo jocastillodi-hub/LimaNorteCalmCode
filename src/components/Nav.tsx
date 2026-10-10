@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type CSSProperties } from "react";
 import Bitacora from "@/components/Bitacora";
 import Racha from "@/components/Racha";
+import { alternarSilencio, useControlesMusica, useSilenciada } from "@/lib/musica";
 import { useSesion } from "@/lib/session";
 
 // Accesos del menú desplegable de la cabecera. Oasis y Charla salieron de la navegación.
@@ -29,6 +30,8 @@ export default function Nav() {
   const { nocturno, setNocturno, checkin, setBitacoraAbierta } = useSesion();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const necesitaApoyo = checkin !== null && emocionesDificiles.includes(checkin.emocion);
+  const silenciada = useSilenciada();
+  useControlesMusica();
 
   // Escape cierra el menú.
   useEffect(() => {
@@ -56,12 +59,23 @@ export default function Nav() {
           <button
             type="button"
             role="switch"
+            aria-label="Modo noche"
             aria-checked={nocturno}
             onClick={() => setNocturno(!nocturno)}
             className="flex items-center gap-2 rounded-full border-2 border-b-4 border-sky-200 bg-white px-3 py-1.5 text-sm font-bold text-sky-900"
           >
             <span aria-hidden="true">{nocturno ? "🌙" : "☀️"}</span>
-            <span>{nocturno ? "Noche" : "Día"}</span>
+            <span className="hidden sm:inline">{nocturno ? "Noche" : "Día"}</span>
+          </button>
+          <button
+            type="button"
+            onClick={alternarSilencio}
+            aria-pressed={silenciada}
+            aria-label={silenciada ? "Activar música" : "Silenciar música"}
+            title="Tecla M: silenciar o activar"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border-2 border-b-4 border-sky-200 bg-white text-xl shadow transition active:translate-y-0.5 active:border-b-2"
+          >
+            <span aria-hidden="true">{silenciada ? "🔇" : "🔊"}</span>
           </button>
           <button
             type="button"
