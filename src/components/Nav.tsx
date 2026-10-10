@@ -11,7 +11,7 @@ import { useSesion } from "@/lib/session";
 // Accesos del menú desplegable de la cabecera. Oasis y Charla salieron de la navegación.
 const enlaces = [
   { href: "/autocuidado", imagen: "/perla.png", texto: "Mimos", animacion: "mascota-pop" },
-  { href: "/red", imagen: "/pratricko.png", texto: "Red", animacion: "mascota-brinco" },
+  { href: "/red", imagen: "/pratricko.png", texto: "Material Educativo", animacion: "mascota-brinco" },
   { href: "/apoyo", imagen: "/pulpita.png", texto: "Salvavidas", animacion: "mascota-inflar" },
 ];
 const DURACION_MASCOTA_MS = 650;

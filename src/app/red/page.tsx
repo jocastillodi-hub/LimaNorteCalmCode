@@ -40,7 +40,7 @@ export default function Red() {
       <div className="flex flex-col gap-6">
         <button type="button" onClick={() => { setAbierto(null); setAviso(""); setError(""); }} className="self-start rounded-2xl border-b-4 border-slate-300 bg-white px-4 py-2 font-bold text-slate-700">← Volver al catálogo</button>
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-sky-700">{abierto.area} · curso ficticio</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-sky-700">{abierto.area}</p>
           <h1 className="text-3xl font-extrabold text-sky-900">{abierto.nombre}</h1>
         </div>
 
@@ -88,13 +88,9 @@ export default function Red() {
   return (
     <div className="flex flex-col gap-6">
       <div className="text-center">
-        <h1 className="text-3xl font-extrabold text-sky-900">🌐 Red de materias</h1>
-        <p className="mt-2 text-slate-600">Explora cursos y mira qué ideas han compartido otros estudiantes.</p>
+        <h1 className="text-3xl font-extrabold text-sky-900">🌐 Material Educativo</h1>
+        <p className="mt-2 text-slate-600">Explora recursos, guías y fuentes de consulta recomendadas para tus materias.</p>
       </div>
-
-      <p className="rounded-xl bg-amber-50 px-4 py-2 text-center text-xs text-amber-900">
-        Demostración: todos los cursos son ficticios y el contenido es de ejemplo.
-      </p>
 
       <div>
         <label htmlFor="buscar-curso" className="sr-only">Buscar curso</label>
@@ -123,10 +119,6 @@ export default function Red() {
           ))}
         </ul>
       )}
-
-      <p className="text-center text-xs text-slate-500">
-        Los cursos están inventados. Todo el material es educativo y general.
-      </p>
     </div>
   );
 }
