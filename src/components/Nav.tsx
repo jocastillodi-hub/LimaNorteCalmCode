@@ -10,9 +10,9 @@ import { useSesion } from "@/lib/session";
 
 // Accesos del menú desplegable de la cabecera. Oasis y Charla salieron de la navegación.
 const enlaces = [
-  { href: "/autocuidado", icono: "🌷", texto: "Mimos" },
-  { href: "/red", icono: "🌐", texto: "Red" },
-  { href: "/apoyo", icono: "🛟", texto: "Salvavidas" },
+  { href: "/autocuidado", imagen: "/perla.png", texto: "Mimos" },
+  { href: "/red", imagen: "/pratricko.png", texto: "Red" },
+  { href: "/apoyo", imagen: "/pulpita.png", texto: "Salvavidas" },
 ];
 
 // Bitácora va primera en el menú; en total hay 4 botones.
@@ -118,7 +118,8 @@ export default function Nav() {
                 aria-haspopup="dialog"
                 className={`${claseItem} border-slate-200 bg-white text-slate-700`}
               >
-                <span className="text-3xl" aria-hidden="true">📜</span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/piñita.png" alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
                 Bitácora
               </button>
             </li>
@@ -138,7 +139,8 @@ export default function Nav() {
                     onClick={() => setMenuAbierto(false)}
                     className={`${claseItem} ${estilo}`}
                   >
-                    <span className="text-3xl" aria-hidden="true">{e.icono}</span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={e.imagen} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
                     {e.texto}
                   </Link>
                 </li>
