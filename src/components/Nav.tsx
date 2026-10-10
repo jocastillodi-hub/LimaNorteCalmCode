@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type CSSProperties } from "react";
 import Bitacora from "@/components/Bitacora";
 import Racha from "@/components/Racha";
@@ -10,10 +10,11 @@ import { useSesion } from "@/lib/session";
 
 // Accesos del menú desplegable de la cabecera. Oasis y Charla salieron de la navegación.
 const enlaces = [
-  { href: "/autocuidado", imagen: "/perla.png", texto: "Mimos" },
-  { href: "/red", imagen: "/pratricko.png", texto: "Red" },
-  { href: "/apoyo", imagen: "/pulpita.png", texto: "Salvavidas" },
+  { href: "/autocuidado", imagen: "/perla.png", texto: "Mimos", animacion: "mascota-pop" },
+  { href: "/red", imagen: "/pratricko.png", texto: "Red", animacion: "mascota-brinco" },
+  { href: "/apoyo", imagen: "/pulpita.png", texto: "Salvavidas", animacion: "mascota-inflar" },
 ];
+const DURACION_MASCOTA_MS = 650;
 
 // Bitácora va primera en el menú; en total hay 4 botones.
 const TOTAL_ITEMS = enlaces.length + 1;
@@ -28,7 +29,10 @@ function retraso(indice: number, abierto: boolean): CSSProperties {
 export default function Nav() {
   const pathname = usePathname();
   const { nocturno, setNocturno, checkin, setBitacoraAbierta } = useSesion();
+  const router = useRouter();
   const [menuAbierto, setMenuAbierto] = useState(false);
+  // Opción cuya mascota se está animando (null = ninguna).
+  const [elegida, setElegida] = useState<string | null>(null);
   const necesitaApoyo = checkin !== null && emocionesDificiles.includes(checkin.emocion);
   const silenciada = useSilenciada();
   useControlesMusica();
@@ -42,6 +46,18 @@ export default function Nav() {
     window.addEventListener("keydown", alPulsarTecla);
     return () => window.removeEventListener("keydown", alPulsarTecla);
   }, [menuAbierto]);
+
+  // Anima la mascota elegida y, al terminar, cierra el menú y ejecuta la acción.
+  function elegir(clave: string, accion: () => void) {
+    if (elegida) return;
+    setElegida(clave);
+    const espera = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : DURACION_MASCOTA_MS;
+    window.setTimeout(() => {
+      setMenuAbierto(false);
+      setElegida(null);
+      accion();
+    }, espera);
+  }
 
   const claseItem = "flex w-full items-center gap-3 rounded-3xl border-2 border-b-4 px-4 py-3 text-base font-extrabold shadow-lg transition active:translate-y-0.5 active:border-b-2";
   const claseVisible = (abierto: boolean) =>
@@ -111,15 +127,12 @@ export default function Nav() {
             <li className={claseVisible(menuAbierto)} style={retraso(0, menuAbierto)}>
               <button
                 type="button"
-                onClick={() => {
-                  setBitacoraAbierta(true);
-                  setMenuAbierto(false);
-                }}
+                onClick={() => elegir("bitacora", () => setBitacoraAbierta(true))}
                 aria-haspopup="dialog"
                 className={`${claseItem} border-slate-200 bg-white text-slate-700`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/piñita.png" alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
+                <img src="/piñita.png" alt="" aria-hidden="true" className={`relative z-10 h-7 w-7 object-contain ${elegida === "bitacora" ? "mascota-salto" : ""}`} />
                 Bitácora
               </button>
             </li>
@@ -136,11 +149,14 @@ export default function Nav() {
                   <Link
                     href={e.href}
                     aria-current={activo ? "page" : undefined}
-                    onClick={() => setMenuAbierto(false)}
+                    onClick={(ev) => {
+                      ev.preventDefault();
+                      elegir(e.href, () => router.push(e.href));
+                    }}
                     className={`${claseItem} ${estilo}`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={e.imagen} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
+                    <img src={e.imagen} alt="" aria-hidden="true" className={`relative z-10 h-7 w-7 object-contain ${elegida === e.href ? e.animacion : ""}`} />
                     {e.texto}
                   </Link>
                 </li>
