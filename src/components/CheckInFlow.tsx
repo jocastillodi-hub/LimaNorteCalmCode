@@ -106,7 +106,7 @@ function EscalaEmoji({
 }
 
 export default function CheckInFlow() {
-  const { setCheckin, checkin, registrarActividad } = useSesion();
+  const { setCheckin, checkin, registrarActividad, setBitacoraAbierta } = useSesion();
   const [paso, setPaso] = useState(0);
   const [r, setR] = useState<Respuestas>(checkin ?? {});
   const [resultado, setResultado] = useState<Orientacion | null>(null);
@@ -170,6 +170,19 @@ export default function CheckInFlow() {
               <li key={p} className="rounded-xl bg-teal-50 px-4 py-3 text-teal-900">{p}</li>
             ))}
           </ul>
+        </div>
+
+        <div className="rounded-3xl border-2 border-b-4 border-violet-200 bg-violet-50 p-6 text-violet-950">
+          <h2 className="text-lg font-bold">📖 Revisión recomendada</h2>
+          <p className="mt-2 text-base">Tómate un momento para revisar las actividades que registraste esta semana. Ver cómo avanzaste también ayuda.</p>
+          <button
+            type="button"
+            onClick={() => setBitacoraAbierta(true)}
+            aria-haspopup="dialog"
+            className="mt-4 w-full rounded-2xl border-b-4 border-teal-900 bg-teal-700 px-6 py-3 text-base font-bold text-white shadow-sm transition hover:bg-teal-800 active:translate-y-1 active:border-b-0 sm:w-auto"
+          >
+            📖 Ver Bitácora de la semana
+          </button>
         </div>
 
         <div className="flex flex-wrap justify-center gap-3">
