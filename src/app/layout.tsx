@@ -20,8 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Nav />
             <main className="relative z-0 mx-auto max-w-5xl px-4 py-6 pb-40 sm:py-8">
               {children}
-              <footer className="mt-10 text-center text-[11px] font-medium tracking-wide text-sky-950/60">
-                Esta herramienta apoya, no diagnostica.
+              <footer className="mt-10 flex justify-center">
+                <p className="rounded-full bg-white/80 px-4 py-1 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-sm">
+                  Esta herramienta apoya, no diagnostica.
+                </p>
               </footer>
             </main>
           </Escenario>

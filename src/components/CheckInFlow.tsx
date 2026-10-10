@@ -243,7 +243,7 @@ export default function CheckInFlow() {
             type="button"
             onClick={siguiente}
             disabled={!actual.listo}
-            className="rounded-2xl border-b-4 border-sky-400 bg-sky-200 px-8 py-3 text-base font-extrabold text-sky-900 shadow-sm transition hover:bg-sky-300 active:translate-y-0.5 active:border-b-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-2xl border-b-4 border-teal-900 bg-teal-700 px-8 py-3 text-base font-bold text-white shadow-sm transition hover:bg-teal-800 active:translate-y-1 active:border-b-0 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {ultimo ? "Ver mi orientación ✨" : "Siguiente →"}
           </button>
