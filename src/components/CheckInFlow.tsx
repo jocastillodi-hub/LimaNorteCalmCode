@@ -27,6 +27,17 @@ const pasosPracticos: Record<Orientacion["nivel"], string[]> = {
   alto: ["🫁 Haz la micro-pausa ahora", "🤝 Escribe a alguien de confianza", "🌱 Con que hagas una sola cosa hoy basta"],
 };
 
+// Subtítulos empáticos por paso (reemplazan a los textos de formulario).
+const subtitulos = [
+  "Nombrar lo que sientes ya es un gran paso.",
+  "No hay respuestas correctas, solo la tuya.",
+  "Así entendemos mejor el entorno en el que estás.",
+  "Hay días en que el cuerpo avisa. Esta escala es tuya.",
+  "¿Cómo está tu energía para el viaje de hoy?",
+  "Selecciona tu nivel de batería mental antes de empezar.",
+  "Ponle nombre a lo que más pesa; no hace falta que sea perfecto.",
+];
+
 function Opciones<T extends string>({
   opciones,
   valor,
@@ -188,7 +199,8 @@ export default function CheckInFlow() {
         <p className="mt-6 text-5xl" aria-hidden="true">{actual.emoji}</p>
         <h2 className="mt-2 text-xl font-bold text-amber-950 sm:text-2xl">{actual.titulo}</h2>
         <p className="mt-1 text-sm text-amber-900/80">
-          {actual.opcional ? "Opcional: puedes saltarla." : "Responde con lo que sientas. Puedes volver atrás cuando quieras."}
+          {subtitulos[paso]}
+          {actual.opcional && " Opcional: puedes saltarla."}
         </p>
 
         <div className="mt-6">

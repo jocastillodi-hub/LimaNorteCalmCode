@@ -21,7 +21,7 @@ export default function Racha() {
 
   return (
     <div
-      className="flex items-center gap-2 rounded-full bg-amber-300/90 px-3 py-1.5 text-sm font-bold text-amber-950 shadow"
+      className="flex items-center gap-2 whitespace-nowrap rounded-full bg-amber-300/90 px-3 py-1.5 text-sm font-bold text-amber-950 shadow"
       title="Racha de actividades completadas en esta sesión"
     >
       <span aria-hidden="true" className={`text-lg ${brillo ? "racha-brilla" : ""}`}>🍔</span>

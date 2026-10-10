@@ -119,14 +119,15 @@ export default function BotonSOS() {
         type="button"
         onClick={() => (abierto ? cerrar() : setAbierto(true))}
         aria-expanded={abierto}
-        className="fixed bottom-24 right-4 z-50 flex items-center gap-2 rounded-full border-b-4 border-rose-700 bg-gradient-to-r from-orange-500 to-rose-500 px-5 py-3 font-extrabold text-white shadow-2xl ring-4 ring-white/50 transition hover:scale-105 active:translate-y-0.5"
+        aria-label="Modo Pánico SOS"
+        className="fixed bottom-24 right-4 z-50 flex items-center gap-2 rounded-full border-b-4 border-rose-700 bg-gradient-to-r from-orange-500 to-rose-500 p-3 font-extrabold text-white shadow-2xl ring-4 ring-white/50 transition hover:scale-105 active:translate-y-0.5 sm:px-5 sm:py-3"
       >
         <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
           <path d="M3 8h11a3 3 0 1 0-3-3" />
           <path d="M3 12h16a3 3 0 1 1-3 3" />
           <path d="M3 16h7" />
         </svg>
-        Modo Pánico SOS
+        <span className="hidden sm:inline">Modo Pánico SOS</span>
       </button>
     </>
   );

@@ -47,7 +47,10 @@ export default function Nav() {
   return (
     <>
       <header className="panel-nav relative z-40 mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3">
-        <Link href="/" className="text-base font-extrabold text-sky-900 sm:text-lg">🌱 UCV - Bienestar</Link>
+        <Link href="/" aria-label="UCV - Bienestar" className="whitespace-nowrap text-base font-extrabold text-sky-900 sm:text-lg">
+          <span className="sm:hidden">🌱 UCV</span>
+          <span className="hidden sm:inline">🌱 UCV - Bienestar</span>
+        </Link>
         <div className="relative flex items-center gap-2">
           <Racha />
           <button
