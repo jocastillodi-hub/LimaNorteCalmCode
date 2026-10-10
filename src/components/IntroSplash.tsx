@@ -3,55 +3,17 @@
 import { useEffect, useState } from "react";
 import { iniciarMusica } from "@/lib/musica";
 
-// Tiempos de la secuencia en globals.css (`.concha-abierta`, `.perla`).
-const MS_ABRIR = 800;
+// Tiempos de la secuencia: estallido (globals.css `.burbuja-estalla`) y desvanecido del fondo.
+const MS_ESTALLAR = 200;
 const MS_DESVANECER = 300;
 
-// Concha de mar con perla. Las valvas se abren al tocarla y la perla sube a la superficie.
-function ConchaConPerla() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 200 200" className="concha-mece h-64 w-64 overflow-visible drop-shadow-xl sm:h-80 sm:w-80">
-      <defs>
-        <radialGradient id="grad-valva" cx="50%" cy="30%" r="75%">
-          <stop offset="0%" stopColor="#fff7ed" />
-          <stop offset="55%" stopColor="#fbcfe8" />
-          <stop offset="100%" stopColor="#f472b6" />
-        </radialGradient>
-        <radialGradient id="grad-perla" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="60%" stopColor="#e0f2fe" />
-          <stop offset="100%" stopColor="#7dd3fc" />
-        </radialGradient>
-      </defs>
-
-      {/* Valva izquierda: gira desde la bisagra inferior */}
-      <g className="valva valva-izq">
-        <path d="M100 170 C55 172 18 140 14 96 C11 62 38 30 70 36 C86 39 96 52 100 68 Z" fill="url(#grad-valva)" stroke="#be185d" strokeWidth="3" strokeLinejoin="round" />
-        <path d="M100 170 L40 62 M100 170 L66 42 M100 170 L22 110" stroke="#ffffff" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" fill="none" />
-      </g>
-
-      {/* Valva derecha: espejo de la izquierda */}
-      <g className="valva valva-der">
-        <path d="M100 170 C145 172 182 140 186 96 C189 62 162 30 130 36 C114 39 104 52 100 68 Z" fill="url(#grad-valva)" stroke="#be185d" strokeWidth="3" strokeLinejoin="round" />
-        <path d="M100 170 L160 62 M100 170 L134 42 M100 170 L178 110" stroke="#ffffff" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" fill="none" />
-      </g>
-
-      {/* Perla: visible sobre la concha cerrada, sube y brilla al abrirla */}
-      <g className="perla">
-        <circle cx="100" cy="125" r="22" fill="url(#grad-perla)" stroke="#bae6fd" strokeWidth="2" />
-        <ellipse cx="92" cy="116" rx="6" ry="4" fill="#ffffff" opacity="0.9" />
-      </g>
-    </svg>
-  );
-}
-
 export default function IntroSplash() {
-  const [estado, setEstado] = useState<"visible" | "abriendo" | "desvaneciendo" | "oculto">("visible");
+  const [estado, setEstado] = useState<"visible" | "estallando" | "desvaneciendo" | "oculto">("visible");
 
-  // Secuencia tras el toque: abrir la concha, desvanecer el fondo y retirar el splash.
+  // Tras el estallido, se desvanece el splash y luego se retira.
   useEffect(() => {
-    if (estado === "abriendo") {
-      const id = window.setTimeout(() => setEstado("desvaneciendo"), MS_ABRIR);
+    if (estado === "estallando") {
+      const id = window.setTimeout(() => setEstado("desvaneciendo"), MS_ESTALLAR);
       return () => window.clearTimeout(id);
     }
     if (estado === "desvaneciendo") {
@@ -66,8 +28,9 @@ export default function IntroSplash() {
 
   function entrar() {
     if (iniciado) return;
+    // Dentro del gesto del usuario: así el navegador permite reproducir el audio.
     iniciarMusica();
-    setEstado("abriendo");
+    setEstado("estallando");
   }
 
   return (
@@ -83,13 +46,11 @@ export default function IntroSplash() {
         type="button"
         onClick={entrar}
         disabled={iniciado}
-        aria-label="Tocar para entrar"
-        className={`flex flex-col items-center gap-6 rounded-[3rem] p-4 ${iniciado ? "concha-abierta" : ""}`}
+        className={`flex h-64 w-64 items-center justify-center rounded-full border-2 border-white/70 bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.95),rgba(186,230,253,0.35)_45%,rgba(56,189,248,0.25))] p-6 text-center text-xl font-extrabold text-sky-950 shadow-[inset_0_-18px_40px_rgba(255,255,255,0.6),inset_0_12px_30px_rgba(255,255,255,0.7),0_20px_50px_rgba(14,116,144,0.35)] sm:h-72 sm:w-72 sm:text-2xl ${
+          iniciado ? "burbuja-estalla" : "burbuja-levita"
+        }`}
       >
-        <ConchaConPerla />
-        <span className="rounded-full bg-white/70 px-5 py-2 text-lg font-extrabold text-sky-950 shadow-md sm:text-xl">
-          Tocar para entrar
-        </span>
+        Tocar para entrar
       </button>
     </div>
   );
