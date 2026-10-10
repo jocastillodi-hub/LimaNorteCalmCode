@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 
 // Música de fondo. El archivo debe estar en public/audio/bg-calma.mp3.
 const RUTA_MUSICA = "/audio/bg-calma.mp3";
-// Duración del estallido en globals.css (`.splash-estalla`).
-const DURACION_ESTALLIDO_MS = 200;
+// Tiempos de la secuencia en globals.css (`.concha-abierta`, `.perla`).
+const MS_ABRIR = 800;
+const MS_DESVANECER = 300;
 
 // Única instancia de audio: sobrevive al desmontaje del splash.
 let musica: HTMLAudioElement | null = null;
@@ -23,24 +24,67 @@ function iniciarMusica() {
   }
 }
 
-export default function IntroSplash() {
-  const [estado, setEstado] = useState<"visible" | "estallando" | "oculto">("visible");
+// Concha de mar con perla. Las valvas se abren al tocarla y la perla sube a la superficie.
+function ConchaConPerla() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 200 200" className="concha-mece h-64 w-64 overflow-visible drop-shadow-xl sm:h-80 sm:w-80">
+      <defs>
+        <radialGradient id="grad-valva" cx="50%" cy="30%" r="75%">
+          <stop offset="0%" stopColor="#fff7ed" />
+          <stop offset="55%" stopColor="#fbcfe8" />
+          <stop offset="100%" stopColor="#f472b6" />
+        </radialGradient>
+        <radialGradient id="grad-perla" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="60%" stopColor="#e0f2fe" />
+          <stop offset="100%" stopColor="#7dd3fc" />
+        </radialGradient>
+      </defs>
 
-  // Tras el estallido, el splash se retira y deja ver la aplicación.
+      {/* Valva izquierda: gira desde la bisagra inferior */}
+      <g className="valva valva-izq">
+        <path d="M100 170 C55 172 18 140 14 96 C11 62 38 30 70 36 C86 39 96 52 100 68 Z" fill="url(#grad-valva)" stroke="#be185d" strokeWidth="3" strokeLinejoin="round" />
+        <path d="M100 170 L40 62 M100 170 L66 42 M100 170 L22 110" stroke="#ffffff" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" fill="none" />
+      </g>
+
+      {/* Valva derecha: espejo de la izquierda */}
+      <g className="valva valva-der">
+        <path d="M100 170 C145 172 182 140 186 96 C189 62 162 30 130 36 C114 39 104 52 100 68 Z" fill="url(#grad-valva)" stroke="#be185d" strokeWidth="3" strokeLinejoin="round" />
+        <path d="M100 170 L160 62 M100 170 L134 42 M100 170 L178 110" stroke="#ffffff" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" fill="none" />
+      </g>
+
+      {/* Perla: visible sobre la concha cerrada, sube y brilla al abrirla */}
+      <g className="perla">
+        <circle cx="100" cy="125" r="22" fill="url(#grad-perla)" stroke="#bae6fd" strokeWidth="2" />
+        <ellipse cx="92" cy="116" rx="6" ry="4" fill="#ffffff" opacity="0.9" />
+      </g>
+    </svg>
+  );
+}
+
+export default function IntroSplash() {
+  const [estado, setEstado] = useState<"visible" | "abriendo" | "desvaneciendo" | "oculto">("visible");
+
+  // Secuencia tras el toque: abrir la concha, desvanecer el fondo y retirar el splash.
   useEffect(() => {
-    if (estado !== "estallando") return;
-    const id = window.setTimeout(() => setEstado("oculto"), DURACION_ESTALLIDO_MS);
-    return () => window.clearTimeout(id);
+    if (estado === "abriendo") {
+      const id = window.setTimeout(() => setEstado("desvaneciendo"), MS_ABRIR);
+      return () => window.clearTimeout(id);
+    }
+    if (estado === "desvaneciendo") {
+      const id = window.setTimeout(() => setEstado("oculto"), MS_DESVANECER);
+      return () => window.clearTimeout(id);
+    }
   }, [estado]);
 
   if (estado === "oculto") return null;
 
-  const estallando = estado === "estallando";
+  const iniciado = estado !== "visible";
 
   function entrar() {
-    if (estallando) return;
+    if (iniciado) return;
     iniciarMusica();
-    setEstado("estallando");
+    setEstado("abriendo");
   }
 
   return (
@@ -48,18 +92,21 @@ export default function IntroSplash() {
       role="dialog"
       aria-modal="true"
       aria-label="Pantalla de entrada"
-      className={`fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center bg-gradient-to-b from-sky-400 via-cyan-300 to-teal-200 transition-opacity duration-200 ${estallando ? "opacity-0" : "opacity-100"}`}
+      className={`fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center overflow-hidden bg-gradient-to-b from-sky-400 via-cyan-300 to-teal-200 transition-opacity duration-300 ${
+        estado === "desvaneciendo" ? "opacity-0" : "opacity-100"
+      }`}
     >
       <button
         type="button"
         onClick={entrar}
-        disabled={estallando}
+        disabled={iniciado}
         aria-label="Tocar para entrar"
-        className={`flex h-56 w-56 items-center justify-center rounded-full border-2 border-white/70 bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.95),rgba(186,230,253,0.35)_45%,rgba(56,189,248,0.25))] text-center text-xl font-extrabold text-sky-950 shadow-[inset_0_-18px_40px_rgba(255,255,255,0.6),inset_0_12px_30px_rgba(255,255,255,0.7),0_20px_50px_rgba(14,116,144,0.35)] sm:h-72 sm:w-72 sm:text-2xl ${
-          estallando ? "splash-estalla" : "splash-flota"
-        }`}
+        className={`flex flex-col items-center gap-6 rounded-[3rem] p-4 ${iniciado ? "concha-abierta" : ""}`}
       >
-        <span>Tocar para entrar</span>
+        <ConchaConPerla />
+        <span className="rounded-full bg-white/70 px-5 py-2 text-lg font-extrabold text-sky-950 shadow-md sm:text-xl">
+          Tocar para entrar
+        </span>
       </button>
     </div>
   );

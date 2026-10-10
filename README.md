@@ -8,8 +8,8 @@ Proyecto del Bootcamp UCV · Hackathon de Salud Mental con IA.
 
 | Ruta | Qué hace |
 |---|---|
-| `/` | Bienvenida, nombre opcional (o anónimo), aviso “Esta herramienta apoya, no diagnostica”. |
-| `/check-in` | Check-in voluntario (contexto, tensión, emoción, energía, concentración, dificultad) y orientación no clínica. |
+| `/` | Pantalla de entrada (concha con perla que inicia la música de fondo), luego **Mi Clima Interno**: revisión voluntaria (clima, contexto, tensión, emoción, energía, concentración, dificultad) y orientación no clínica. |
+| `/check-in` | Redirige a `/` (enlaces antiguos). |
 | `/prioridades` | Una prioridad por área (Prácticas y Tesis), un primer paso pequeño y tareas editables. Los ejemplos están marcados como demostrativos. |
 | `/pausa` | Temporizador de 180 s con respiración suave (4 s inhalar / 4 s exhalar, sin retenciones), guía de voz opcional, pausar/reanudar/detener y checklist de dos pasos. |
 | `/asistente` | Chat de escucha con IA mediante `POST /api/chat`. Modo demostrativo si no hay clave. Botón para borrar la conversación. |
@@ -77,3 +77,7 @@ npm run test        # Vitest: lógica de check-in, prioridades y detección de r
 - La detección de riesgo es por palabras clave y es orientativa.
 - La guía de voz depende de que el navegador soporte síntesis de voz.
 - El contenido de prioridades y ejercicios es genérico y debe revisarse con especialistas antes de un uso real.
+
+## Música de fondo
+
+La pantalla de entrada reproduce `public/audio/bg-calma.mp3` al primer toque (los navegadores bloquean el audio sin un gesto del usuario). El archivo no está en el repositorio: añádelo tú con licencia libre. Si falta, la app funciona en silencio.
