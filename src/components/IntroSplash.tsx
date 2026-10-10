@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Fredoka } from "next/font/google";
+import { Fredoka, Lilita_One } from "next/font/google";
 import { iniciarMusica } from "@/lib/musica";
 
-const titulo = Fredoka({ subsets: ["latin"], weight: ["700"] });
+const marca = Lilita_One({ subsets: ["latin"], weight: "400" });
+const eslogan = Fredoka({ subsets: ["latin"], weight: ["600"] });
 
 // Tiempos de la secuencia: estallido (globals.css `.burbuja-estalla`) y desvanecido del fondo.
 const MS_ESTALLAR = 200;
@@ -46,10 +47,17 @@ export default function IntroSplash() {
       }`}
     >
       <div className="flex flex-col items-center gap-6">
-        <h1
-          className={`${titulo.className} bg-gradient-to-r from-sky-900 via-blue-600 to-teal-500 bg-clip-text px-4 text-center text-5xl leading-tight text-transparent drop-shadow-[0_3px_0_rgba(255,255,255,0.9)] sm:text-6xl`}
-        >
-          Nexum: Tu mejor opción
+        <h1 className="flex flex-col items-center gap-3 px-4 text-center">
+          <span
+            className={`${marca.className} text-7xl leading-none tracking-wide text-white drop-shadow-[0_5px_0_#1e3a8a] drop-shadow-[0_0_22px_rgba(255,255,255,0.55)] sm:text-8xl`}
+          >
+            Nexum
+          </span>
+          <span
+            className={`${eslogan.className} rounded-full bg-indigo-900 px-5 py-1.5 text-lg tracking-wide text-cyan-100 shadow-lg sm:text-xl`}
+          >
+            Tu mejor opción
+          </span>
         </h1>
         <button
           type="button"
