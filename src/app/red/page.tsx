@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AsistenteCurso from "@/components/AsistenteCurso";
+import BuscadorFuentes from "@/components/BuscadorFuentes";
 import Tarjeta from "@/components/Tarjeta";
 import { filtrarCursos, validarIdea, type Curso, type Idea } from "@/lib/red";
 
@@ -51,8 +51,8 @@ export default function Red() {
                 {abierto.info.map((t) => <li key={t} className="rounded-2xl bg-sky-50 px-4 py-3 text-slate-700">{t}</li>)}
               </ul>
             </Tarjeta>
-            <Tarjeta titulo="🤖 Asistente del curso">
-              <AsistenteCurso curso={abierto.nombre} />
+            <Tarjeta titulo="🔎 Consulta académica directa">
+              <BuscadorFuentes />
             </Tarjeta>
           </div>
 
