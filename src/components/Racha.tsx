@@ -25,7 +25,10 @@ export default function Racha() {
       title="Racha de actividades completadas en esta sesión"
     >
       <span aria-hidden="true" className={`text-lg ${brillo ? "racha-brilla" : ""}`}>🍔</span>
-      <span aria-live="polite">Racha: {racha}</span>
+      <span aria-live="polite">
+        <span className="sr-only sm:not-sr-only">Racha: </span>
+        {racha}
+      </span>
     </div>
   );
 }

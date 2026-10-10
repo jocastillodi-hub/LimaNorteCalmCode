@@ -14,7 +14,7 @@ export function evaluarCheckin(c: Checkin): Orientacion {
   else if (c.tension === 3) puntaje += 1;
   if (c.energia <= 2) puntaje += 1;
   if (c.concentracion <= 2) puntaje += 1;
-  if (c.emocion === "agotamiento" || c.emocion === "tristeza" || c.emocion === "frustracion") {
+  if (c.emocion === "agotado" || c.emocion === "triste" || c.emocion === "colera") {
     puntaje += 1;
   }
 

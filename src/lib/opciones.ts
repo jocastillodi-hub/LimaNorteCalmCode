@@ -2,12 +2,12 @@
 import type { Clima, Contexto, Dificultad, Emocion } from "./types";
 
 export const emociones: [Emocion, string, string][] = [
-  ["tranquilidad", "Tranquilidad", "😌"],
-  ["alegria", "Alegría", "😄"],
-  ["tristeza", "Tristeza", "🌧️"],
-  ["frustracion", "Frustración", "😤"],
-  ["preocupacion", "Preocupación", "😟"],
-  ["agotamiento", "Agotamiento", "🥱"],
+  ["alegre", "Alegre", "😄"],
+  ["colera", "Cólera", "😡"],
+  ["triste", "Triste", "😢"],
+  ["estresado", "Estresado", "🤯"],
+  ["nostalgico", "Nostálgico", "🥺"],
+  ["agotado", "Agotado", "🥱"],
 ];
 
 export const climas: [Clima, string, string][] = [

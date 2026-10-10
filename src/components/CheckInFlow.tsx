@@ -194,10 +194,9 @@ export default function CheckInFlow() {
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
-      <section key={paso} className="cuadro-pina rounded-[2.5rem] p-6 sm:p-10" aria-labelledby="titulo-clima">
-        <h1 id="titulo-clima" className="text-2xl font-extrabold text-amber-950 sm:text-3xl">Mi Clima Interno</h1>
-        <p className="mt-6 text-5xl" aria-hidden="true">{actual.emoji}</p>
-        <h2 className="mt-2 text-xl font-bold text-amber-950 sm:text-2xl">{actual.titulo}</h2>
+      <section key={paso} className="cuadro-pina rounded-[2.5rem] p-6 sm:p-10" aria-labelledby="titulo-paso">
+        <p className="text-5xl" aria-hidden="true">{actual.emoji}</p>
+        <h1 id="titulo-paso" className="mt-2 text-2xl font-bold text-amber-950 sm:text-3xl">{actual.titulo}</h1>
         <p className="mt-1 text-sm text-amber-900/80">
           {subtitulos[paso]}
           {actual.opcional && " Opcional: puedes saltarla."}

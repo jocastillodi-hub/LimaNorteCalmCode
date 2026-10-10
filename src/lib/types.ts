@@ -6,12 +6,12 @@ export type Contexto =
   | "tesis";
 
 export type Emocion =
-  | "tranquilidad"
-  | "alegria"
-  | "tristeza"
-  | "frustracion"
-  | "preocupacion"
-  | "agotamiento";
+  | "alegre"
+  | "colera"
+  | "triste"
+  | "estresado"
+  | "nostalgico"
+  | "agotado";
 
 export type Dificultad =
   | "exceso_tareas"

@@ -6,7 +6,7 @@ import type { Checkin } from "../types";
 const base: Checkin = {
   contexto: "universidad",
   tension: 2,
-  emocion: "tranquilidad",
+  emocion: "alegre",
   energia: 4,
   concentracion: 4,
   dificultad: "exceso_tareas",
@@ -22,7 +22,7 @@ describe("evaluarCheckin", () => {
   });
 
   it("clasifica una sobrecarga alta", () => {
-    const alto = evaluarCheckin({ ...base, tension: 5, energia: 1, concentracion: 1, emocion: "agotamiento" });
+    const alto = evaluarCheckin({ ...base, tension: 5, energia: 1, concentracion: 1, emocion: "agotado" });
     expect(alto.nivel).toBe("alto");
   });
 });
