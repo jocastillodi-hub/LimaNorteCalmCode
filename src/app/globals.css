@@ -76,6 +76,18 @@
 }
 .entrada { animation: entrada 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
+/* ---------- Splash de entrada: la burbuja flota y estalla al tocarla ---------- */
+@keyframes splash-flota {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes splash-estalla {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(1.5); opacity: 0; }
+}
+.splash-flota { animation: splash-flota 4s ease-in-out infinite; }
+.splash-estalla { animation: splash-estalla 200ms ease-out forwards; }
+
 /* ---------- Onda de agua al pulsar ---------- */
 @keyframes onda-clic {
   from { transform: translate(-50%, -50%) scale(0); opacity: 0.6; }

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Boton from "@/components/Boton";
 import { evaluarCheckin, type Orientacion } from "@/lib/evaluacion";
 import { climas, contextos, dificultades, emociones } from "@/lib/opciones";
 import { useSesion } from "@/lib/session";
@@ -184,26 +183,10 @@ export default function CheckInFlow() {
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
-      <div>
-        <div className="flex items-center justify-between text-sm text-slate-600">
-          <span className="font-medium text-sky-900">Paso {paso + 1} de {total}</span>
-          <span aria-hidden="true">{"🫧".repeat(paso + 1)}</span>
-        </div>
-        <div
-          role="progressbar"
-          aria-valuemin={1}
-          aria-valuemax={total}
-          aria-valuenow={paso + 1}
-          aria-label="Avance del check-in"
-          className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/60"
-        >
-          <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-sky-500 transition-all duration-500" style={{ width: `${((paso + 1) / total) * 100}%` }} />
-        </div>
-      </div>
-
-      <section key={paso} className="cuadro-pina rounded-[2.5rem] p-6 sm:p-10" aria-labelledby="titulo-paso">
-        <p className="text-5xl" aria-hidden="true">{actual.emoji}</p>
-        <h1 id="titulo-paso" className="mt-2 text-2xl font-bold text-amber-950 sm:text-3xl">{actual.titulo}</h1>
+      <section key={paso} className="cuadro-pina rounded-[2.5rem] p-6 sm:p-10" aria-labelledby="titulo-clima">
+        <h1 id="titulo-clima" className="text-2xl font-extrabold text-amber-950 sm:text-3xl">Mi Clima Interno</h1>
+        <p className="mt-6 text-5xl" aria-hidden="true">{actual.emoji}</p>
+        <h2 className="mt-2 text-xl font-bold text-amber-950 sm:text-2xl">{actual.titulo}</h2>
         <p className="mt-1 text-sm text-amber-900/80">
           {actual.opcional ? "Opcional: puedes saltarla." : "Responde con lo que sientas. Puedes volver atrás cuando quieras."}
         </p>
@@ -244,9 +227,14 @@ export default function CheckInFlow() {
               Saltar
             </button>
           )}
-          <Boton onClick={siguiente} disabled={!actual.listo} className="rounded-full bg-sky-600 px-8 hover:bg-sky-700">
+          <button
+            type="button"
+            onClick={siguiente}
+            disabled={!actual.listo}
+            className="rounded-2xl border-b-4 border-sky-400 bg-sky-200 px-8 py-3 text-base font-extrabold text-sky-900 shadow-sm transition hover:bg-sky-300 active:translate-y-0.5 active:border-b-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
             {ultimo ? "Ver mi orientación ✨" : "Siguiente →"}
-          </Boton>
+          </button>
         </div>
       </div>
     </div>
