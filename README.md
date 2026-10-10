@@ -8,8 +8,8 @@ Proyecto del Bootcamp UCV · Hackathon de Salud Mental con IA.
 
 | Ruta | Qué hace |
 |---|---|
-| `/` | Pantalla de bienvenida con alias anónimo (Supabase) y, después, **Mi Clima Interno**: revisión voluntaria (clima, contexto, tensión, emoción, energía, concentración, dificultad) y orientación no clínica. |
-| `/check-in` | Redirige a `/` (enlaces antiguos). |
+| `/` | Bienvenida, nombre opcional (o anónimo), aviso “Esta herramienta apoya, no diagnostica”. |
+| `/check-in` | Check-in voluntario (contexto, tensión, emoción, energía, concentración, dificultad) y orientación no clínica. |
 | `/prioridades` | Una prioridad por área (Prácticas y Tesis), un primer paso pequeño y tareas editables. Los ejemplos están marcados como demostrativos. |
 | `/pausa` | Temporizador de 180 s con respiración suave (4 s inhalar / 4 s exhalar, sin retenciones), guía de voz opcional, pausar/reanudar/detener y checklist de dos pasos. |
 | `/asistente` | Chat de escucha con IA mediante `POST /api/chat`. Modo demostrativo si no hay clave. Botón para borrar la conversación. |
@@ -23,8 +23,7 @@ Proyecto del Bootcamp UCV · Hackathon de Salud Mental con IA.
 ## Privacidad
 
 - Anónimo por defecto: no hay registro, correo, DNI ni contraseña.
-- El alias es lo único que se guarda: un UUID aleatorio en `localStorage` (`ucv-usuario-id`) y el alias en la tabla `usuarios_anonimos` de Supabase. No se vincula a correo ni a datos personales. Borrar los datos del navegador equivale a perder el refugio: no hay recuperación entre dispositivos.
-- Las respuestas de Mi Clima Interno, el chat y la bitácora viven **solo en memoria** del navegador. No se usan cookies persistentes ni analíticas.
+- Los datos viven **solo en memoria** del navegador. No se usan `localStorage`, cookies persistentes, base de datos ni analíticas.
 - El servidor no registra el contenido de los mensajes ni las respuestas del proveedor de IA.
 - Al usar el asistente con IA configurada, el texto se envía a Anthropic para generar la respuesta. La pantalla lo informa.
 - Los mensajes no se usan para entrenar modelos.
@@ -61,7 +60,7 @@ Sin `ANTHROPIC_API_KEY`, el asistente funciona en **modo demostrativo** y lo ind
 ```bash
 npm run typecheck   # TypeScript
 npm run lint        # ESLint (config de Next.js)
-npm run test        # Vitest: lógica de Mi Clima Interno, prioridades y detección de riesgo
+npm run test        # Vitest: lógica de check-in, prioridades y detección de riesgo
 ```
 
 ## Desplegar en Vercel

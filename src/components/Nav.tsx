@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { CSSProperties } from "react";
 import Bitacora from "@/components/Bitacora";
 import Racha from "@/components/Racha";
 import { useSesion } from "@/lib/session";
 
 // Barra inferior fija con íconos grandes. Los nombres son cálidos a propósito.
 const enlaces = [
-  { href: "/", icono: "💛", texto: "Mi Clima Interno" },
+  { href: "/", icono: "💛", texto: "Mi Vibra" },
   { href: "/pausa", icono: "🫧", texto: "Oasis" },
   { href: "/asistente", icono: "💬", texto: "Charla" },
   { href: "/autocuidado", icono: "🌷", texto: "Mimos" },
@@ -26,7 +25,7 @@ export default function Nav() {
 
   return (
     <>
-      <header data-reveal className="panel-nav relative z-10 mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+      <header className="panel-nav relative z-10 mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
         <Link href="/" className="text-lg font-extrabold text-sky-900">🌿 UCV · Bienestar</Link>
         <div className="flex items-center gap-2">
           <Racha />
@@ -47,7 +46,7 @@ export default function Nav() {
 
       <nav aria-label="Principal" className="panel-nav fixed inset-x-0 bottom-0 z-40 border-t-4 border-slate-200 bg-white/95 backdrop-blur">
         <ul className="mx-auto flex max-w-xl justify-around px-2 pb-2 pt-2">
-          <li data-reveal style={{ "--i": 1 } as CSSProperties}>
+          <li>
             <button
               type="button"
               onClick={() => setBitacoraAbierta(true)}
@@ -58,11 +57,11 @@ export default function Nav() {
               Bitácora
             </button>
           </li>
-          {enlaces.map((e, i) => {
+          {enlaces.map((e) => {
             const activo = pathname === e.href;
             const resaltar = e.href === "/apoyo" && necesitaApoyo && !activo;
             return (
-              <li key={e.href} data-reveal style={{ "--i": i + 2 } as CSSProperties}>
+              <li key={e.href}>
                 <Link
                   href={e.href}
                   aria-current={activo ? "page" : undefined}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import Boton from "@/components/Boton";
 import { evaluarCheckin, type Orientacion } from "@/lib/evaluacion";
 import { climas, contextos, dificultades, emociones } from "@/lib/opciones";
@@ -28,20 +28,6 @@ const pasosPracticos: Record<Orientacion["nivel"], string[]> = {
   alto: ["🫁 Haz la micro-pausa ahora", "🤝 Escribe a alguien de confianza", "🌱 Con que hagas una sola cosa hoy basta"],
 };
 
-// Subtítulos empáticos por paso (reemplazan a los de formulario).
-const subtitulos = [
-  "Nombrar lo que sientes ya es un gran paso.",
-  "No hay respuestas correctas, solo la tuya.",
-  "Así entendemos mejor el entorno en el que estás.",
-  "Hay días en que el cuerpo avisa. Esta escala es tuya.",
-  "¿Cómo está tu energía para el viaje de hoy?",
-  "Selecciona tu nivel de batería mental antes de empezar.",
-  "Ponle nombre a lo que más pesa; no hace falta que sea perfecto.",
-];
-
-// Botón tipo videojuego: borde inferior grueso que se hunde al pulsarlo.
-const botonJuego = "border-b-[6px] active:border-b-2 active:translate-y-1";
-
 function Opciones<T extends string>({
   opciones,
   valor,
@@ -55,17 +41,15 @@ function Opciones<T extends string>({
 }) {
   return (
     <div role="radiogroup" aria-label={etiqueta} className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-      {opciones.map(([v, t, e], i) => (
+      {opciones.map(([v, t, e]) => (
         <button
           key={v}
           type="button"
           role="radio"
           aria-checked={valor === v}
           onClick={() => onElegir(v)}
-          data-reveal
-          style={{ "--i": i + 1 } as CSSProperties}
-          className={`esponja flex flex-col items-center gap-1 rounded-[1.75rem] border-2 p-4 text-sm font-semibold text-amber-950 ${botonJuego} ${
-            valor === v ? "border-cyan-500 border-b-cyan-700 bg-cyan-100 shadow-md" : "border-amber-100 border-b-amber-300 bg-amber-50 shadow-sm"
+          className={`esponja flex flex-col items-center gap-1 rounded-[1.75rem] border-2 p-4 text-sm font-semibold text-amber-950 ${
+            valor === v ? "border-cyan-500 bg-cyan-100 shadow-md" : "border-transparent bg-amber-50 shadow-sm"
           }`}
         >
           <span className="text-4xl" aria-hidden="true">{e}</span>
@@ -100,8 +84,8 @@ function EscalaEmoji({
             aria-checked={valor === n}
             aria-label={`${n} de 5`}
             onClick={() => onElegir(n)}
-            className={`esponja flex h-16 flex-1 flex-col items-center justify-center rounded-[1.5rem] border-2 ${botonJuego} ${
-              valor === n ? "border-cyan-500 border-b-cyan-700 bg-cyan-100 shadow-md" : "border-amber-100 border-b-amber-300 bg-amber-50 shadow-sm"
+            className={`esponja flex h-16 flex-1 flex-col items-center justify-center rounded-[1.5rem] border-2 ${
+              valor === n ? "border-cyan-500 bg-cyan-100 shadow-md" : "border-transparent bg-amber-50 shadow-sm"
             }`}
           >
             <span className="text-3xl" aria-hidden="true">{emojis[n - 1]}</span>
@@ -192,7 +176,7 @@ export default function CheckInFlow() {
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/pausa" className="rounded-xl bg-teal-600 px-5 py-3 font-medium text-white shadow hover:bg-teal-700">🫁 Hacer una pausa</Link>
           <Link href="/asistente" className="rounded-xl bg-white px-5 py-3 font-medium text-teal-800 shadow-sm hover:bg-teal-50">💬 Hablar con el asistente</Link>
-          <button type="button" onClick={reiniciar} className="rounded-xl px-5 py-3 font-medium text-slate-600 underline">Empezar de nuevo</button>
+          <button type="button" onClick={reiniciar} className="rounded-xl px-5 py-3 font-medium text-slate-600 underline">Repetir el check-in</button>
         </div>
       </div>
     );
@@ -202,7 +186,7 @@ export default function CheckInFlow() {
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
       <div>
         <div className="flex items-center justify-between text-sm text-slate-600">
-          <span className="font-extrabold text-sky-900">🌤️ Mi Clima Interno</span>
+          <span className="font-medium text-sky-900">Paso {paso + 1} de {total}</span>
           <span aria-hidden="true">{"🫧".repeat(paso + 1)}</span>
         </div>
         <div
@@ -210,7 +194,7 @@ export default function CheckInFlow() {
           aria-valuemin={1}
           aria-valuemax={total}
           aria-valuenow={paso + 1}
-          aria-label="Avance de Mi Clima Interno"
+          aria-label="Avance del check-in"
           className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/60"
         >
           <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-sky-500 transition-all duration-500" style={{ width: `${((paso + 1) / total) * 100}%` }} />
@@ -221,8 +205,7 @@ export default function CheckInFlow() {
         <p className="text-5xl" aria-hidden="true">{actual.emoji}</p>
         <h1 id="titulo-paso" className="mt-2 text-2xl font-bold text-amber-950 sm:text-3xl">{actual.titulo}</h1>
         <p className="mt-1 text-sm text-amber-900/80">
-          {subtitulos[paso]}
-          {actual.opcional && " Opcional: puedes saltarla."}
+          {actual.opcional ? "Opcional: puedes saltarla." : "Responde con lo que sientas. Puedes volver atrás cuando quieras."}
         </p>
 
         <div className="mt-6">
