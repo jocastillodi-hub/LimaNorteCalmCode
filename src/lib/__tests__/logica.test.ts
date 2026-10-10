@@ -7,9 +7,6 @@ const base: Checkin = {
   contexto: "universidad",
   tension: 2,
   emocion: "alegre",
-  energia: 4,
-  concentracion: 4,
-  dificultad: "exceso_tareas",
 };
 
 describe("evaluarCheckin", () => {
@@ -18,11 +15,11 @@ describe("evaluarCheckin", () => {
   });
 
   it("clasifica una carga moderada", () => {
-    expect(evaluarCheckin({ ...base, tension: 3, energia: 2 }).nivel).toBe("moderado");
+    expect(evaluarCheckin({ ...base, tension: 3, emocion: "triste" }).nivel).toBe("moderado");
   });
 
   it("clasifica una sobrecarga alta", () => {
-    const alto = evaluarCheckin({ ...base, tension: 5, energia: 1, concentracion: 1, emocion: "agotado" });
+    const alto = evaluarCheckin({ ...base, tension: 5, emocion: "agotado" });
     expect(alto.nivel).toBe("alto");
   });
 });

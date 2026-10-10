@@ -4,15 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { evaluarCheckin, type Orientacion } from "@/lib/evaluacion";
-import { climas, contextos, dificultades, emociones } from "@/lib/opciones";
+import { contextos, emociones } from "@/lib/opciones";
 import { useSesion } from "@/lib/session";
 import type { Checkin } from "@/lib/types";
 
 type Respuestas = Partial<Checkin>;
 
 const emojiTension = ["😌", "🙂", "😐", "😣", "🥵"];
-const emojiEnergia = ["🪫", "🔋", "🔋", "⚡", "🚀"];
-const emojiConcentracion = ["🌫️", "🌤️", "🌤️", "🎯", "🧠"];
 
 const colorNivel = {
   bajo: "from-emerald-100 to-teal-100 border-emerald-200 text-emerald-900",
@@ -30,12 +28,8 @@ const pasosPracticos: Record<Orientacion["nivel"], string[]> = {
 // Subtítulos empáticos por paso (reemplazan a los textos de formulario).
 const subtitulos = [
   "Nombrar lo que sientes ya es un gran paso.",
-  "No hay respuestas correctas, solo la tuya.",
   "Así entendemos mejor el entorno en el que estás.",
   "Hay días en que el cuerpo avisa. Esta escala es tuya.",
-  "¿Cómo está tu energía para el viaje de hoy?",
-  "Selecciona tu nivel de batería mental antes de empezar.",
-  "Ponle nombre a lo que más pesa; no hace falta que sea perfecto.",
 ];
 
 function Opciones<T extends string>({
@@ -126,15 +120,10 @@ export default function CheckInFlow() {
     return () => clearTimeout(id);
   }, [resultado, cancelado, router]);
 
-  // El clima es opcional: se puede saltar sin que bloquee el flujo.
   const pasos = [
     { titulo: "¿Cómo te sientes hoy?", emoji: "💛", listo: r.emocion !== undefined },
-    { titulo: "Si tu día fuera un clima, ¿cuál sería?", emoji: "🌤️", listo: true, opcional: true },
     { titulo: "¿Dónde estás ahora?", emoji: "📍", listo: r.contexto !== undefined },
     { titulo: "¿Cuánta tensión sientes?", emoji: "🌡️", listo: r.tension !== undefined },
-    { titulo: "¿Cómo está tu energía?", emoji: "🔋", listo: r.energia !== undefined },
-    { titulo: "¿Qué tan clara está tu mente?", emoji: "🧠", listo: r.concentracion !== undefined },
-    { titulo: "¿Qué te pesa más hoy?", emoji: "🎒", listo: r.dificultad !== undefined },
   ];
   const actual = pasos[paso];
   const total = pasos.length;
@@ -197,25 +186,14 @@ export default function CheckInFlow() {
       <section key={paso} className="cuadro-pina rounded-[2.5rem] p-6 sm:p-10" aria-labelledby="titulo-paso">
         <p className="text-5xl" aria-hidden="true">{actual.emoji}</p>
         <h1 id="titulo-paso" className="mt-2 text-2xl font-bold text-amber-950 sm:text-3xl">{actual.titulo}</h1>
-        <p className="mt-1 text-sm text-amber-900/80">
-          {subtitulos[paso]}
-          {actual.opcional && " Opcional: puedes saltarla."}
-        </p>
+        <p className="mt-1 text-sm text-amber-900/80">{subtitulos[paso]}</p>
 
         <div className="mt-6">
           {paso === 0 && <Opciones opciones={emociones} valor={r.emocion} onElegir={(v) => setR({ ...r, emocion: v })} etiqueta="Emoción" />}
-          {paso === 1 && <Opciones opciones={climas} valor={r.clima} onElegir={(v) => setR({ ...r, clima: v })} etiqueta="Clima del día" />}
-          {paso === 2 && <Opciones opciones={contextos} valor={r.contexto} onElegir={(v) => setR({ ...r, contexto: v })} etiqueta="Contexto" />}
-          {paso === 3 && (
+          {paso === 1 && <Opciones opciones={contextos} valor={r.contexto} onElegir={(v) => setR({ ...r, contexto: v })} etiqueta="Contexto" />}
+          {paso === 2 && (
             <EscalaEmoji valor={r.tension} onElegir={(n) => setR({ ...r, tension: n })} emojis={emojiTension} etiqueta="Nivel de tensión" textos={["Nada", "Mucha"]} />
           )}
-          {paso === 4 && (
-            <EscalaEmoji valor={r.energia} onElegir={(n) => setR({ ...r, energia: n })} emojis={emojiEnergia} etiqueta="Nivel de energía" textos={["Muy baja", "Alta"]} />
-          )}
-          {paso === 5 && (
-            <EscalaEmoji valor={r.concentracion} onElegir={(n) => setR({ ...r, concentracion: n })} emojis={emojiConcentracion} etiqueta="Concentración" textos={["Nublada", "Clara"]} />
-          )}
-          {paso === 6 && <Opciones opciones={dificultades} valor={r.dificultad} onElegir={(v) => setR({ ...r, dificultad: v })} etiqueta="Dificultad" />}
         </div>
       </section>
 
@@ -229,15 +207,6 @@ export default function CheckInFlow() {
           ← Atrás
         </button>
         <div className="flex items-center gap-2">
-          {actual.opcional && (
-            <button
-              type="button"
-              onClick={() => setPaso((p) => p + 1)}
-              className="rounded-xl px-4 py-3 text-slate-600 underline"
-            >
-              Saltar
-            </button>
-          )}
           <button
             type="button"
             onClick={siguiente}

@@ -12,13 +12,11 @@ export function evaluarCheckin(c: Checkin): Orientacion {
   let puntaje = 0;
   if (c.tension >= 4) puntaje += 2;
   else if (c.tension === 3) puntaje += 1;
-  if (c.energia <= 2) puntaje += 1;
-  if (c.concentracion <= 2) puntaje += 1;
   if (c.emocion === "agotado" || c.emocion === "triste" || c.emocion === "colera") {
     puntaje += 1;
   }
 
-  if (puntaje >= 4) {
+  if (puntaje >= 3) {
     return {
       nivel: "alto",
       titulo: "Parece que llevas mucha carga ahora",
