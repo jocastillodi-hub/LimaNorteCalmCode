@@ -76,17 +76,17 @@
 }
 .entrada { animation: entrada 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
-/* ---------- Splash de entrada: burbuja mágica que levita y estalla al tocarla ---------- */
+/* ---------- Splash de entrada: el pulpo levita y estalla al tocarlo ---------- */
 @keyframes levitar {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-16px); }
 }
 @keyframes estallar {
   from { transform: scale(1); opacity: 1; }
-  to { transform: scale(1.25); opacity: 0; }
+  to { transform: scale(1.5); opacity: 0; }
 }
-.burbuja-levita { animation: levitar 4s ease-in-out infinite; }
-.burbuja-estalla { animation: estallar 200ms ease-out forwards; }
+.pulpo-levita { animation: levitar 4s ease-in-out infinite; }
+.pulpo-estalla { animation: estallar 200ms ease-out forwards; }
 
 /* ---------- Onda de agua al pulsar ---------- */
 @keyframes onda-clic {

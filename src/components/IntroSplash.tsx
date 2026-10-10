@@ -46,11 +46,13 @@ export default function IntroSplash() {
         type="button"
         onClick={entrar}
         disabled={iniciado}
-        className={`flex h-64 w-64 items-center justify-center rounded-full border-2 border-white/70 bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.95),rgba(186,230,253,0.35)_45%,rgba(56,189,248,0.25))] p-6 text-center text-xl font-extrabold text-sky-950 shadow-[inset_0_-18px_40px_rgba(255,255,255,0.6),inset_0_12px_30px_rgba(255,255,255,0.7),0_20px_50px_rgba(14,116,144,0.35)] sm:h-72 sm:w-72 sm:text-2xl ${
-          iniciado ? "burbuja-estalla" : "burbuja-levita"
-        }`}
+        className={`flex flex-col items-center gap-4 rounded-[3rem] p-4 ${iniciado ? "pulpo-estalla" : "pulpo-levita"}`}
       >
-        Tocar para entrar
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/pulpita.png" alt="" aria-hidden="true" className="h-72 w-auto object-contain drop-shadow-xl sm:h-80" />
+        <span className="rounded-full bg-white/70 px-5 py-2 text-lg font-extrabold text-sky-950 shadow-md sm:text-xl">
+          Tocar para entrar
+        </span>
       </button>
     </div>
   );
