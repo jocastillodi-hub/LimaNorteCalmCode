@@ -23,7 +23,7 @@ export default function Autocuidado() {
   return (
     <div className="flex flex-col gap-6">
       <div className="text-center">
-        <h1 className="text-3xl font-extrabold text-sky-900">🌷 Mimos para Mí</h1>
+        <h1 className="text-3xl font-extrabold text-sky-900">🌷 Espacio de Autocuidado</h1>
         <p className="mt-2 text-slate-600">Ninguna actividad es obligatoria. Elige lo que te sirva hoy.</p>
       </div>
 
