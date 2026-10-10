@@ -11,8 +11,16 @@ export type Evaluacion = {
   accion: string;
 };
 
-// Estado SOLO en memoria: se pierde al recargar la página. No usa localStorage ni cookies.
+// Fases de la pantalla de bloqueo: bloqueada (cubre la app), entrando (coreografía) y abierta.
+export type FaseDesbloqueo = "bloqueada" | "entrando" | "abierta";
+
+// Estado de sesión SOLO en memoria: se pierde al recargar la página. El alias anónimo es la única
+// excepción y se guarda en Supabase + localStorage (ver PantallaBienvenida).
 type Sesion = {
+  alias: string | null;
+  setAlias: (a: string | null) => void;
+  fase: FaseDesbloqueo;
+  setFase: (f: FaseDesbloqueo) => void;
   checkin: Checkin | null;
   setCheckin: (c: Checkin) => void;
   tensionAntes: number | null;
@@ -40,6 +48,8 @@ type Sesion = {
 const SesionContext = createContext<Sesion | null>(null);
 
 export function SesionProvider({ children }: { children: ReactNode }) {
+  const [alias, setAlias] = useState<string | null>(null);
+  const [fase, setFase] = useState<FaseDesbloqueo>("bloqueada");
   const [checkin, setCheckinState] = useState<Checkin | null>(null);
   const [tensionAntes, setTensionAntes] = useState<number | null>(null);
   const [emocionNota, setEmocionNota] = useState<{ emocion: Emocion | null; nota: string }>({ emocion: null, nota: "" });
@@ -97,6 +107,10 @@ export function SesionProvider({ children }: { children: ReactNode }) {
 
   const valor = useMemo(
     () => ({
+      alias,
+      setAlias,
+      fase,
+      setFase,
       checkin,
       setCheckin,
       tensionAntes,
@@ -120,7 +134,7 @@ export function SesionProvider({ children }: { children: ReactNode }) {
       setGuardarBitacora,
       reiniciar,
     }),
-    [checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, nocturno, racha, registrarActividad, misiones, guardarBitacora, bitacoraAbierta, laboratorioId, reiniciar],
+    [alias, fase, checkin, setCheckin, tensionAntes, emocionNota, evaluacion, chat, nocturno, racha, registrarActividad, misiones, guardarBitacora, bitacoraAbierta, laboratorioId, reiniciar],
   );
 
   return <SesionContext.Provider value={valor}>{children}</SesionContext.Provider>;

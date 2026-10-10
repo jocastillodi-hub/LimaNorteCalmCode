@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// El check-in ahora es la pantalla de inicio.
+// Mi Clima Interno es la pantalla de inicio. Esta ruta solo redirige enlaces antiguos.
 export default function CheckInRedirect() {
   redirect("/");
 }

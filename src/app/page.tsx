@@ -1,7 +1,7 @@
 import CheckInFlow from "@/components/CheckInFlow";
 import { CasaPina, EstrellaDeMar, Medusa } from "@/components/Decoraciones";
 
-// La entrada ya es el check-in: primero cómo te sientes, sin pedir nombre.
+// La entrada es Mi Clima Interno: primero cómo te sientes. El alias se pide en WelcomeScreen.
 export default function Inicio() {
   return (
     <div className="relative flex flex-col gap-8">

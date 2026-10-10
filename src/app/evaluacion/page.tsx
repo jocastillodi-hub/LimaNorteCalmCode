@@ -87,7 +87,7 @@ export default function Evaluacion() {
           ) : (
             <p>
               Respuesta guardada.{" "}
-              {tensionAntes === null && "Si haces el check-in, podremos comparar tu tensión antes y después. 🌱"}
+              {tensionAntes === null && "Si completas Mi Clima Interno, podremos comparar tu tensión antes y después. 🌱"}
             </p>
           )}
           {evaluacion.accion && <p className="mt-2">Tu siguiente paso: {evaluacion.accion}</p>}
